@@ -1,0 +1,45 @@
+<div class="container-fluid h-100">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col col-sm-8 col-md-8 col-lg-6 col-xl-5">
+            <form [formGroup]="addClinicaForm" (ngSubmit)="onSubmit()" class="form-signin"> 
+                <div class="form-group">
+                    <label for="nombreCli">Nombre</label>
+                    <input type="text" formControlName="nombreCli" class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitted && f.nombreCli.errors }" required />
+                    <div *ngIf="submitted && addClinicaForm.controls['nombreCli'].errors" class="invalid-feedback">
+                        <div *ngIf="addClinicaForm.controls['nombreCli'].errors.required">Campo obligatorio</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="razonSocialCli">Razon Social</label>
+                    <input type="text" formControlName="razonSocialCli" class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitted && f.razonSocialCli.errors }" required/>
+                    <div *ngIf="submitted && addClinicaForm.controls['razonSocialCli'].errors" class="invalid-feedback">
+                        <div *ngIf="addClinicaForm.controls['razonSocialCli'].errors.required">Campo obligatorio</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="infoGeneralCli">Informacion Adicional</label>
+                    <input type="text" formControlName="infoGeneralCli" class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitted && f.infoGeneralCli.errors }" required/>
+                    <div *ngIf="submitted && addClinicaForm.controls['infoGeneralCli'].errors" class="invalid-feedback">
+                        <div *ngIf="addClinicaForm.controls['infoGeneralCli'].errors.required">Campo obligatorio</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="estadoCli">En Funcionamiento</label>
+                    <select class="form-control" id=estadoCli formControlName="estadoCli" required>
+                        <option value=1>Si</option>
+                        <option value=0>No</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" class="btn btn-primary">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

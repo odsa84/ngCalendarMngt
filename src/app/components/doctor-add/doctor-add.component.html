@@ -1,0 +1,72 @@
+<div class="container-fluid h-100">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col col-sm-8 col-md-8 col-lg-6 col-xl-5">
+            <form [formGroup]="addDoctorForm" (ngSubmit)="onSubmit()" class="form-signin"> 
+                <div class="form-group">
+                    <label for="nombresDoc">Nombre</label>
+                    <input type="text" formControlName="nombresDoc" class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitted && f.nombresDoc.errors }" required />
+                    <div *ngIf="submitted && addDoctorForm.controls['nombresDoc'].errors" class="invalid-feedback">
+                        <div *ngIf="addDoctorForm.controls['nombresDoc'].errors.required">Campo obligatorio</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="apellidosDoc">Apellidos</label>
+                    <input type="text" formControlName="apellidosDoc" class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitted && f.apellidosDoc.errors }" required/>
+                    <div *ngIf="submitted && addDoctorForm.controls['apellidosDoc'].errors" class="invalid-feedback">
+                        <div *ngIf="addDoctorForm.controls['apellidosDoc'].errors.required">Campo obligatorio</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="estadoDoc">¿Médico activo?</label>
+                    <select class="form-control" id=estadoDoc formControlName="estadoDoc" required>
+                        <option value=1>Si</option>
+                        <option value=0>No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="titulos">Títulos</label>
+                    <ng-multiselect-dropdown formControlName="titulosDoc" [placeholder]="'Titulos'"
+                    [data]="doctorTitulos" [(ngModel)]="selectedItemsT" [settings]="dropdownSettings" 
+                    (onSelect)="onItemSelectT($event)" (onSelectAll)="onSelectAllT($event)" 
+                    (onDeSelectAll)="deSelectAllT($event)" (onDeSelect)="deSelectT($event)" required>
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="form-group">
+                    <label for="especialidades">Especialidades</label>
+                    <ng-multiselect-dropdown formControlName="especialidadesDoc" [placeholder]="'Especialidades'"
+                    [data]="doctorEspecialidades" [(ngModel)]="selectedItemsE" [settings]="dropdownSettings1" 
+                    (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)" required>
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="form-group">
+                    <label for="clinicas">Clinicas donde trabaja</label>
+                    <ng-multiselect-dropdown formControlName="clinicasDoc" [placeholder]="'Clinicas'"
+                    [data]="doctorClinicas" [(ngModel)]="selectedItemsC" [settings]="dropdownSettings" 
+                    (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)" required>
+                    </ng-multiselect-dropdown>
+                </div>
+
+                <div class="form-group">
+                    <label for="infoGeneralDoc">Informacion Adicional</label>
+                    <input type="text" formControlName="infoGeneralDoc" class="form-control" 
+                        [ngClass]="{ 'is-invalid': submitted && f.infoGeneralDoc.errors }" required/>
+                    <div *ngIf="submitted && addDoctorForm.controls['infoGeneralDoc'].errors" class="invalid-feedback">
+                        <div *ngIf="addDoctorForm.controls['infoGeneralDoc'].errors.required">Campo obligatorio</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button [disabled]="loading" class="btn btn-primary">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                        Enviar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

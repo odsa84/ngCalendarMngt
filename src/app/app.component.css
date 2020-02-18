@@ -1,0 +1,4 @@
+.nav-item a:hover {
+    color: white !important;
+    cursor: pointer;
+}
