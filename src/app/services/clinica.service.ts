@@ -11,16 +11,12 @@ import { Error } from '../entities/error';
 export class ClinicaService {
 
   private baseUrl = "http://localhost:57171/api/Clinica";
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+    ) { }
 
-  clinicaAdd(idUsuario: string, nombre: string, razonSocial: string, 
-    infoGeneral: string, estado: number) {
-    return this.http.post<any>(`${this.baseUrl}/InsertarClinica`, {
-      "idUsuario": idUsuario, 
-      "nombre": nombre,
-      "razonSocial": razonSocial,
-      "infoGeneral": infoGeneral,
-      "estado": estado}).pipe(map(res => {
+  clinicaAdd(datosEntrada) {
+    return this.http.post<any>(`${this.baseUrl}/InsertarClinica`, datosEntrada).pipe(map(res => {
         return res;
       }));
   }
@@ -28,5 +24,30 @@ export class ClinicaService {
   clinicaListar(idUsuario: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${idUsuario}`).pipe(
       map((res: ClinicaRespuesta) => res.clinicas));
+  }
+
+  clinicas(): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/ConsultarClinica`, {}).pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
+  crearEntradaInsertarClinica(idUsuario: string, nombre: string, razonSocial: string, 
+    infoGeneral: string, estado: number): any {
+    return {
+      "idUsuario": idUsuario, 
+      "nombre": nombre,
+      "razonSocial": razonSocial,
+      "infoGeneral": infoGeneral,
+      "estado": this.convertirEstado(estado)
+    }
+  }
+
+  convertirEstado(estado: number): boolean {
+    if(estado == 1) {
+      return true;
+    }
+    return false;
   }
 }

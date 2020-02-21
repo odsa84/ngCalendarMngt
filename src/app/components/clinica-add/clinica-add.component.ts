@@ -47,8 +47,8 @@ export class ClinicaAddComponent implements OnInit {
     }
     this.loading = true;
     const currentUser = this.authSrv.currentUserValue;
-    this.clinicaSrv.clinicaAdd(currentUser.usuario.id, this.f.nombreCli.value, 
-      this.f.razonSocialCli.value, this.f.infoGeneralCli.value, Number.parseInt(this.f.estadoCli.value))    
+    this.clinicaSrv.clinicaAdd(this.clinicaSrv.crearEntradaInsertarClinica(currentUser.usuario.id, this.f.nombreCli.value, 
+      this.f.razonSocialCli.value, this.f.infoGeneralCli.value, Number.parseInt(this.f.estadoCli.value)))    
     .subscribe(res => {
       this.loading = false;
       this.submitted = false;
