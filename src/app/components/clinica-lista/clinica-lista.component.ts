@@ -5,6 +5,8 @@ import { ClinicaService } from '../../services/clinica.service';
 import { AuthenticationService } from '../../services/authentication.service';
 import { DoctorService } from '../../services/doctor.service';
 import { Doctor } from '../../entities/doctor';
+import { ShareDataService } from '../../services/share-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-clinica-lista',
@@ -14,14 +16,13 @@ import { Doctor } from '../../entities/doctor';
 export class ClinicaListaComponent implements OnInit {
 
   clinicas: Observable<Clinica[]>;
-  doctores: Observable<Doctor[]>;
-
   paginationConfig: any;
 
   constructor(
     private clinicaSrv: ClinicaService, 
     private authSrv: AuthenticationService,
-    private doctorSrv: DoctorService
+    private shareDataSrv: ShareDataService,
+    private router: Router
     ) { 
 
     const currentUser = this.authSrv.currentUserValue;    
@@ -46,7 +47,13 @@ export class ClinicaListaComponent implements OnInit {
   }
 
   mostrarDoctores(id: number) {
-    this.doctores = this.doctorSrv.consultarPorClinica(id);
-    this.doctores.subscribe(res => console.log(res))
+    let cli = {
+      clinica: id
+    };
+    this.shareDataSrv.setObj(id);
+    this.router.navigate(['/doctor-lista'], {
+      queryParams: cli,
+    })
+    //this.router.navigateByUrl('/doctor-lista')
   }
 }

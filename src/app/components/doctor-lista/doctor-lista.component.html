@@ -1,0 +1,31 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3>Doctores</h3>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Informacion General</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doc of doctores | async | paginate: paginationConfig">
+            <td>{{ doc.nombres }}</td>
+            <td>{{ doc.apellidos }}</td>
+            <td>{{ doc.infoGeneral }}</td>
+            <td>
+                <!--<button (click)="deleteEmployee(employee.id)" class="btn btn-danger">Delete</button>-->
+                <button (click)="mostrarDetalles(doc.id)" class="btn btn-info" style="margin-left: 5px">Details</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="text-align: center; margin-top: 2%">
+        <pagination-controls (pageChange)="onPageChange($event)" autoHide="true" responsive="true"></pagination-controls>
+      </div>
+    </div>    
+  </div>

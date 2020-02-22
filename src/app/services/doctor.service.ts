@@ -25,7 +25,7 @@ export class DoctorService {
   }
 
   doctorListar(idClinica: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${idClinica}`).pipe(
+    return this.http.get<any>(`${this.baseUrl}/Clinica/${idClinica}`).pipe(
       map((res: DoctorRespuesta) => res.doctores));
   }
 

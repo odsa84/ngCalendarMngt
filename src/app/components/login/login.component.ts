@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from '../../services/authentication.service';
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
 		private formBuilder: FormBuilder,
 		private route: ActivatedRoute,
 		private router: Router,
-		private authenticationService: AuthenticationService
+		private authenticationService: AuthenticationService,
+		private alertSrv: AlertService
 	) { }
 
 	ngOnInit() {  
@@ -38,11 +40,12 @@ export class LoginComponent implements OnInit {
 	}
 
 	onSubmit() {
-		this.submitted = true;		
+		this.submitted = true;	
+		
+		this.alertSrv.clear();
 
 		// stop here if form is invalid
 		if (this.loginForm.invalid) {
-			console.log("Aqui estoy...");
 			this.submitted = false;
 			return;
 		}
@@ -52,14 +55,13 @@ export class LoginComponent implements OnInit {
 			.pipe(first())
 			.subscribe(
 				data => {
-					console.log(data); 
 					this.router.navigate([this.returnUrl]);
 				},
 				error => {
-					console.log(error);
 					this.error = error;
 					this.showSpinner = false;
 					this.submitted = false;
+					this.alertSrv.error("Usuario y/o contraseña incorrectos");
 				});
 	}
 

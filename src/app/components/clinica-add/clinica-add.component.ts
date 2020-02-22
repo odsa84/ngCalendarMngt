@@ -54,10 +54,9 @@ export class ClinicaAddComponent implements OnInit {
       this.submitted = false;
       if(res.error.codigo === '00') {
         this.limpiarFormulario();
-        this.alertSrv.success("Su clinica se creo satisfactoriamente");
+        this.alertSrv.success("Correcto!!!");
       } else{
-        this.alertSrv.error("Hubo un problema al crear la clinica, vuelva a intentarlo.");
-        console.log("Error...");
+        this.alertSrv.error("Error!!!! Vuelva a intentarlo.");
       }
     });  
     

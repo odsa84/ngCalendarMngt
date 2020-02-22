@@ -14,6 +14,21 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DoctorAddComponent } from './components/doctor-add/doctor-add.component';
 import { DoctorListaComponent } from './components/doctor-lista/doctor-lista.component';
 import { NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers, metaReducers } from './reducers';
+import { NgReduxModule } from '@angular-redux/store';
+import { NgRedux, DevToolsExtension } from '@angular-redux/store';
+import { rootReducer, ArchitectUIState } from './ThemeOptions/store';
+import { ConfigActions } from './ThemeOptions/store/config.actions';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   declarations: [
@@ -22,7 +37,8 @@ import { NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
     ClinicaListaComponent,
     ClinicaAddComponent,
     DoctorAddComponent,
-    DoctorListaComponent
+    DoctorListaComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
@@ -32,12 +48,38 @@ import { NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown';
     HttpClientModule,
     AlertModule,
     NgxPaginationModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgReduxModule,
+    NgbModule,
+    PerfectScrollbarModule,
+    NgMultiSelectDropDownModule.forRoot(),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true
+      }
+    })
   ],
   providers: [
     errorInterceptorProvider,
     jwtInterceptorProvider,
+    ConfigActions,
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private ngRedux: NgRedux<ArchitectUIState>,
+              private devTool: DevToolsExtension) {
+
+    this.ngRedux.configureStore(
+      rootReducer,
+      {} as ArchitectUIState,
+      [],
+      [devTool.isEnabled() ? devTool.enhancer() : f => f]
+    );
+  }
+ }

@@ -9,11 +9,17 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'Gestion de Calendario';
+  toggled = false;
+  collapsed = false;
 
   constructor(private readonly auth: AuthenticationService, private readonly router: Router) { }
 
   logout(): void {
 		this.auth.logout();
 		this.router.navigate(['/login']);
+  }
+
+  onToggle(){
+    this.toggled = !this.toggled;
   }
 }
