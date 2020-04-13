@@ -1,4 +1,9 @@
-.fill-remaining-space {
+/*.fill-remaining-space {
     display: flex;
     justify-content: space-between;
+}*/
+
+.content-wrapper {
+    min-height: calc(100vh - 114px);
+    height: 100%;
 }

@@ -1,0 +1,12 @@
+.main-sidebar {
+    height: 100vh;
+    overflow: scroll;
+}
+
+.iconos {
+    margin-right: 10px;
+}
+
+.font-style {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}

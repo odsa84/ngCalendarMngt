@@ -1,0 +1,102 @@
+<!--<div id="calendar"></div>-->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title cus-head">Ingresa Nueva Cita</h4>
+                    </div>
+                    <div class="card-body" style="background-color: cadetblue;">                        
+                        <label class="cus-head">Cliente:</label>
+                        <div class="row">
+                            <div class="col-10 cus-head">
+                                <ng-select [items]="clientes" bindLabel="nombres" placeholder="Seleccione un cliente"
+                                    [searchable]="true" [(ngModel)]="selectedClie" bindValue="id" name="clienteSelect"
+                                    required>
+                                </ng-select>
+                            </div>
+                            <div class="col-2 cus-head">
+                                <button id="plusBtn" class="close" mat-button (click)="openClienteModal()"
+                                    style="margin-left: 5%; outline: none; color: transparent; min-width: 30px;">+</button>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12 cus-head">
+                                <label>Clinica:</label>
+                                <ng-select [items]="clinicas" bindLabel="nombre" placeholder="Seleccione una clinica"
+                                    [searchable]="true" [(ngModel)]="selectedCli" (change)="getValueClinica()"
+                                    bindValue="id" name="clinicaSelect" required>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12 cus-head">
+                                <label>Doctor:</label>
+                                <ng-select [items]="lstDoctores" bindLabel="nombres" placeholder="Seleccione al doctor"
+                                    [searchable]="true" [(ngModel)]="selectedDoc" bindValue="id" name="doctorSelect"
+                                    (change)="getValueDoctor()" required>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <owl-date-time-inline [(ngModel)]="selectedMoment" class="owlDatTime" #citaDT
+                                    [min]="minDateTime">
+                                </owl-date-time-inline>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-4">
+                                <button (click)="onSubmit()" type="submit" class="btn btn-primary btn-block btn-flat"
+                                    [disabled]="loading">
+                                    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                                    Enviar
+                                </button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-md-8">
+                <div class="card card-primary">
+                    <div class="card-body p-0">
+                        <!-- THE CALENDAR -->
+                        <div class='app'>
+
+                            <div class='app-top'>
+                                <button (click)='toggleVisible()' class="btn btn-block btn-flat btnColor cus-head">Mostrar todas las Citas</button>
+                            </div>
+
+                            <div class='app-calendar' *ngIf="calendarVisible">
+                                <full-calendar 
+                                    #calendar 
+                                    defaultView="dayGridMonth" 
+                                    [header]="{
+                                        left: 'prev,next today',
+                                        center: 'title',
+                                        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                                    }" 
+                                    [plugins]="calendarPlugins" 
+                                    [weekends]="calendarWeekends" 
+                                    [events]="calendarEvents"
+                                    (eventClick)="eventClick($event)"></full-calendar>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div><!-- /.container-fluid -->
+</section>

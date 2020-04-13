@@ -1,19 +1,16 @@
-<nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-<!-- Links -->
-<ul class="navbar-nav">
-    <li class="nav-item">
-        <a routerLink="" class="nav-link" routerLinkActive="active">Empresa List</a>
-    </li>
-    <li class="nav-item">
-        <a routerLink="" class="nav-link" routerLinkActive="active">Add Empresa</a>
-    </li>      
-</ul>
-<ul class="navbar-nav ml-auto">
-    <li class="nav-item">
-    <a (click)="logout()" class="nav-link" routerLinkActive="active">Cerrar sesion</a>
-    </li>
-</ul>
-</nav>
-<div class="main-content">
-    <router-outlet></router-outlet>
+<div class="wrapper">
+    <app-header (toggleMenuSidebar)="toggleMenuSidebar()"></app-header>
+
+    <app-menu-sidebar (mainSidebarHeight)="mainSidebarHeight($event)"></app-menu-sidebar>
+
+    <div #contentWrapper class="content-wrapper">
+        <div class="container" >
+            <br>
+            <router-outlet></router-outlet>
+          </div>
+    </div>
+
+    <app-footer></app-footer>
+    <aside class="control-sidebar control-sidebar-dark"></aside>
+    <div id="sidebar-overlay" (click)="toggleMenuSidebar()"></div>
 </div>

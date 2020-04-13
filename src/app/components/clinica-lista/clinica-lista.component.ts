@@ -3,10 +3,10 @@ import { Observable, BehaviorSubject, from } from 'rxjs';
 import { Clinica } from '../../entities/clinica';
 import { ClinicaService } from '../../services/clinica.service';
 import { AuthenticationService } from '../../services/authentication.service';
-import { DoctorService } from '../../services/doctor.service';
-import { Doctor } from '../../entities/doctor';
 import { ShareDataService } from '../../services/share-data.service';
 import { Router } from '@angular/router';
+import { CiudadService } from '../../services/ciudad.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-clinica-lista',
@@ -15,18 +15,23 @@ import { Router } from '@angular/router';
 })
 export class ClinicaListaComponent implements OnInit {
 
-  clinicas: Observable<Clinica[]>;
+  //clinicas: Observable<Clinica[]>;
+  term: string
+  clinicas: any = [];
   paginationConfig: any;
+  ciudad: any;
+  submitted = false;
+  loading = false;
 
   constructor(
     private clinicaSrv: ClinicaService, 
     private authSrv: AuthenticationService,
     private shareDataSrv: ShareDataService,
-    private router: Router
-    ) { 
-
-    const currentUser = this.authSrv.currentUserValue;    
-    this.clinicas = this.clinicaSrv.clinicaListar(currentUser.usuario.id);
+    private router: Router,
+    private ciudadSrv: CiudadService,
+    private toastr: ToastrService
+    ) {         
+    this.getClinicas();
     
     this.paginationConfig = {
       itemsPerPage: 5,
@@ -36,6 +41,20 @@ export class ClinicaListaComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  getClinicas() {
+    this.clinicas = [];
+    const currentUser = this.authSrv.currentUserValue;
+    this.clinicaSrv.clinicaListar(currentUser.usuario.id).subscribe(res => {
+      res.clinicas.forEach(elem => {      
+        this.clinicas = [...this.clinicas, elem];
+      });
+    })    
+  }
+
+  getCiudad(idProv: any) {
+    this.ciudadSrv.ciudadPorProvincia(idProv)
   }
 
   onPageChange(event) {
@@ -54,6 +73,23 @@ export class ClinicaListaComponent implements OnInit {
     this.router.navigate(['/doctor-lista'], {
       queryParams: cli,
     })
-    //this.router.navigateByUrl('/doctor-lista')
+  }
+
+  eliminar(cli: any) {
+    this.submitted = true;
+    this.loading = true;
+    const currentUser = this.authSrv.currentUserValue;
+    this.clinicaSrv.eliminar(this.clinicaSrv.crearEntradaActualizarClinica(cli.id, currentUser.usuario.id, cli.nombre, 
+      cli.telefono, cli.email, cli.razonSocial, cli.infoGeneral, cli.direccion, cli.referencia, 
+      cli.idProvincia, cli.idCiudad, false)).subscribe(res => {
+        this.loading = false;
+        this.submitted = false;
+        if(res.error.codigo === '00') {
+          this.getClinicas();
+          this.toastr.success("Correcto!!!", "Sistema!")
+        } else{
+          this.toastr.error("Error!!!! Vuelva a intentarlo.", "Sistema!");
+        }
+      })
   }
 }

@@ -13,28 +13,62 @@ import { parse } from 'querystring';
 })
 export class DoctorListaComponent implements OnInit {
 
-  doctores: Observable<Doctor[]>;
-
+  doctores: any = [];
+  term: string;
   paginationConfig: any;
   id: any;
+  submitted = false;
+  loading = false;
 
   constructor(
     private doctorSrv: DoctorService,
     private shareDataSrv: ShareDataService,
     private actRoute: ActivatedRoute
   ) { 
-    this.actRoute.queryParams.subscribe((res)=> {  
-      this.doctores = this.doctorSrv.doctorListar(res.clinica)
+            
+  }
+
+  ngOnInit() {
+    this.actRoute.queryParams.subscribe((res)=> { 
+      if(res.clinica != undefined) {
+        this.getDoctoresPorClinica(res.clinica)
+      } else {
+        this.getDoctores();
+      }
     });  
 
     this.paginationConfig = {
       itemsPerPage: 5,
       currentPage: 1
     };
-        
   }
 
-  ngOnInit() {
+  getDoctores() {
+    this.doctores = [];
+    this.doctorSrv.doctores().subscribe(res => {
+      res.doctores.forEach(elem => {      
+        this.doctores = [...this.doctores, {
+          docs: elem.idDoctorNavigation,
+          titulos: elem.idDoctorNavigation.doctorTitulo,
+          especialidades: elem.idDoctorNavigation.doctorEspecialidad,
+          clinicas: elem.idDoctorNavigation.clinicaDoctor
+        }];      
+      });
+    });
+  }
+
+  getDoctoresPorClinica(clinica: any) {
+    this.doctores = [];
+    this.doctorSrv.doctorListar(clinica).subscribe(res => {      
+      res.forEach(elem => {      
+        this.doctores = [...this.doctores, {
+          docs: elem.idDoctorNavigation,
+          titulos: elem.idDoctorNavigation.doctorTitulo,
+          especialidades: elem.idDoctorNavigation.doctorEspecialidad,
+          clinicas: elem.idDoctorNavigation.clinicaDoctor
+        }];      
+      });
+    })    
   }
 
   onPageChange(event) {
@@ -42,6 +76,10 @@ export class DoctorListaComponent implements OnInit {
   }
 
   mostrarDetalles(di: number) {
+
+  }
+
+  eliminar(doc: any) {
 
   }
 

@@ -1,9 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, Renderer2 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AlertService } from '../../services/alert.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -23,12 +24,15 @@ export class LoginComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private authenticationService: AuthenticationService,
-		private alertSrv: AlertService
+		private alertSrv: AlertService,
+		private toastr: ToastrService,
+		private renderer: Renderer2
 	) { }
 
 	ngOnInit() {  
+		//this.renderer.addClass(document.body, 'login-page');
 		this.loginForm = this.formBuilder.group({
-			username: ['', Validators.required],
+			email: ['', Validators.required],
 			password: ['', Validators.required]
 		});
 
@@ -51,7 +55,7 @@ export class LoginComponent implements OnInit {
 		}
 
 		this.showSpinner = true;
-		this.authenticationService.login(this.f.username.value, this.f.password.value)
+		this.authenticationService.login(this.f.email.value, this.f.password.value)
 			.pipe(first())
 			.subscribe(
 				data => {
@@ -61,9 +65,14 @@ export class LoginComponent implements OnInit {
 					this.error = error;
 					this.showSpinner = false;
 					this.submitted = false;
-					this.alertSrv.error("Usuario y/o contraseña incorrectos");
+					//this.alertSrv.error("Usuario y/o contraseña incorrectos");
+					this.toastr.error('Usuario y/o contraseña incorrectos', 'Sistema!');
 				});
 	}
+
+	/*ngOnDestroy() {
+		this.renderer.removeClass(document.body, 'login-page');
+	  }*/
 
 	// convenience getter for easy access to form fields
 	get f() { return this.loginForm.controls; }

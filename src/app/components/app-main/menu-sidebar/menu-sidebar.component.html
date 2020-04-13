@@ -1,0 +1,95 @@
+<aside #mainSidebar class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a [routerLink]="['/']" class="brand-link">
+        <img src="assets/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+            style="opacity: .8" />
+        <span class="brand-text font-weight-light font-style">Portal Clinica</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar user (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                <img src="assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image" />
+            </div>
+            <div class="info">
+                <a [routerLink]="['/profile']" class="d-block font-style">{{ currentUser.usuario.normalizedUserName }}</a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library
+                <li class="nav-item">
+                    <a [routerLink]="['/']" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Dashboard
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a [routerLink]="['/blank']" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Blank
+                        </p>
+                    </a>
+                </li> -->
+                <li class="nav-header font-style">CLINICAS</li>
+                <li class="nav-item font-style">
+                    <a routerLink="/clinica-lista" (click)="$event.preventDefault()" 
+                        routerLinkActive="active" class="nav-link">
+                        <i class="far fa-list-alt iconos"></i>
+                        <p>
+                            Mostrar
+                            <span class="badge badge-info right">{{ clinicasCount }}</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item font-style">
+                    <a routerLink="/clinica-add" (click)="$event.preventDefault()" 
+                        routerLinkActive="active" class="nav-link">
+                        <i class="fas fa-pen iconos"></i>
+                        <p>Adicionar</p>
+                    </a>
+                </li>
+                <li class="nav-header font-style">DOCTORES</li>
+                <li class="nav-item font-style">
+                    <a routerLink="/doctor-lista" (click)="$event.preventDefault()" 
+                        routerLinkActive="active" class="nav-link">
+                        <i class="far fa-list-alt iconos"></i>
+                        <p>
+                            Mostrar
+                            <span class="badge badge-info right">{{ docsCount }}</span>
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item font-style">
+                    <a routerLink="/doctor-add" (click)="$event.preventDefault()" 
+                        routerLinkActive="active" class="nav-link">
+                        <i class="fas fa-pen iconos"></i>
+                        <p>Adicionar</p>
+                    </a>
+                </li>
+                <li class="nav-header font-style">CITAS MEDICAS</li>
+                <li class="nav-item font-style">
+                    <a routerLink="/calendario" (click)="$event.preventDefault()" 
+                        routerLinkActive="active" class="nav-link">
+                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <p>
+                            Calendario
+                            <span class="badge badge-info right">{{ citasCount }}</span>
+                        </p>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

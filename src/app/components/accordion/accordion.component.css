@@ -1,0 +1,13 @@
+.pointerCursor {
+    /*cursor: pointer;*/
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.headerColor {
+    background-color: #EFF0F1;
+}
+
+.cardDimentions {
+    height: 90%; 
+    width: 100%;
+}

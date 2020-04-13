@@ -1,4 +1,96 @@
-<div class="panel panel-primary">
+<div class="row input-group input-group-sm">
+  <div class="col-4">
+    <input class="form-control form-control-navbar" type="text" placeholder="Search" aria-label="Search"
+      [(ngModel)]="term"/>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-6" *ngFor="let doc of doctores | searchDoctor:term | paginate: paginationConfig; let i = index">
+    <app-accordion title="{{ doc.docs.nombres }} {{ doc.docs.apellidos }}">
+      <div class="cardBody">
+        <div class="row vertical-align">
+          <div class="col-3">
+            <img src="../../../assets/img/doctor2.png" class="imgClass">
+          </div>
+          <div class="col-8 cus-content">
+            <div class="row">
+              <div class="col-5">
+                Telefono:
+              </div>
+              <div class="col-7">
+                {{ doc.docs.telefono }}
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-5">
+                Email:
+              </div>
+              <div class="col-7">
+                {{ doc.docs.email }}
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-5">
+                Titulos:
+              </div>
+              <div class="col-7">
+                <div class="row" *ngFor="let tit of doc.titulos">
+                  -{{ tit.idTituloNavigation.titulo1 }}
+                </div>
+              </div>
+            </div>            
+            <br />
+            <div class="row">
+              <div class="col-5">
+                Especialidades:
+              </div>
+              <div class="col-7">
+                <div class="row" *ngFor="let esp of doc.especialidades">
+                  -{{ esp.idEspecialidadNavigation.especialidad1 }}
+                </div>
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-5">
+                Clinicas:
+              </div>
+              <div class="col-7">
+                <div class="row" *ngFor="let cli of doc.clinicas">
+                  -{{ cli.idClinicaNavigation.nombre }}
+                </div>
+              </div>
+            </div>
+            <br />
+          </div>
+        </div>
+      </div>
+      <div class="cardFooter">
+        <div class="row">
+          <div class="col-6">
+            <button id="elem-{{ doc.id }}" [disabled]="loading" (click)="eliminar(doc)" class="btn btn-danger" style="margin-left: 5px">
+              Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </app-accordion>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <div style="text-align: center; margin-top: 2%">
+      <pagination-controls (pageChange)="onPageChange($event)" autoHide="true" responsive="true"></pagination-controls>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!--<div class="panel panel-primary">
     <div class="panel-heading">
       <h3>Doctores</h3>
     </div>
@@ -13,12 +105,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let doc of doctores | async | paginate: paginationConfig">
+          <tr *ngFor="let doc of doctores | async | paginate: paginationConfig | filter:term">
             <td>{{ doc.nombres }}</td>
             <td>{{ doc.apellidos }}</td>
-            <td>{{ doc.infoGeneral }}</td>
+            <td>{{ doc.infoGeneral | slice:0:40 }}{{ doc.infoGeneral.length > 40 ? ' ...' : '' }}</td>
             <td>
-                <!--<button (click)="deleteEmployee(employee.id)" class="btn btn-danger">Delete</button>-->
                 <button (click)="mostrarDetalles(doc.id)" class="btn btn-info" style="margin-left: 5px">Details</button>
             </td>
           </tr>
@@ -28,4 +119,4 @@
         <pagination-controls (pageChange)="onPageChange($event)" autoHide="true" responsive="true"></pagination-controls>
       </div>
     </div>    
-  </div>
+  </div>-->

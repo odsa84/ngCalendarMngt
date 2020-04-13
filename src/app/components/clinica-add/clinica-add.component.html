@@ -1,43 +1,89 @@
 <div class="container-fluid h-100">
     <div class="row justify-content-center align-items-center h-100">
-        <div class="col col-sm-8 col-md-8 col-lg-6 col-xl-5">
+        <div class="col">
             <form [formGroup]="addClinicaForm" (ngSubmit)="onSubmit()" class="form-signin"> 
-                <div class="form-group">
-                    <label for="nombreCli">Nombre</label>
-                    <input type="text" formControlName="nombreCli" class="form-control" 
-                        [ngClass]="{ 'is-invalid': submitted && f.nombreCli.errors }" required />
-                    <div *ngIf="submitted && addClinicaForm.controls['nombreCli'].errors" class="invalid-feedback">
-                        <div *ngIf="addClinicaForm.controls['nombreCli'].errors.required">Campo obligatorio</div>
+                <br />
+                <div class="row justify-content-center">
+                    <div class="col-sm-4">
+                        <label for="nombreCli">Nombre</label>
+                        <input type="text" formControlName="nombreCli" class="form-control" 
+                            [ngClass]="{ 'is-invalid': submitted && f.nombreCli.errors }" required />
+                        <div *ngIf="submitted && addClinicaForm.controls['nombreCli'].errors" class="invalid-feedback">
+                            <div *ngIf="addClinicaForm.controls['nombreCli'].errors.required">Campo obligatorio</div>
+                        </div>
+                    </div>                
+                    <div class="col-sm-4">
+                        <label for="telefonoCli">Telefono</label>
+                        <input type="text" formControlName="telefonoCli" class="form-control"
+                            (keypress)="keyPress($event)" />
+                        <div *ngIf="submitted && f.telefonoCli.errors" class="invalid-feedback">
+                            <div *ngIf="f.telefonoCli.errors.pattern || f.telefonoCli.errors.maxlength || 
+                                f.telefonoCli.errors.minlength">Telefono incorrecto</div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="razonSocialCli">Razon Social</label>
-                    <input type="text" formControlName="razonSocialCli" class="form-control" 
-                        [ngClass]="{ 'is-invalid': submitted && f.razonSocialCli.errors }" required/>
-                    <div *ngIf="submitted && addClinicaForm.controls['razonSocialCli'].errors" class="invalid-feedback">
-                        <div *ngIf="addClinicaForm.controls['razonSocialCli'].errors.required">Campo obligatorio</div>
+                <br />
+                <div class="row justify-content-center">
+                    <div class="col-sm-4">
+                        <label for="emailCli">Email</label>
+                        <input type="email" formControlName="emailCli" class="form-control"
+                         [ngClass]="{ 'is-invalid': submitted && f.emailCli.errors }" />
+                         <div *ngIf="submitted && f.emailCli.errors" class="invalid-feedback">
+                            <div *ngIf="f.emailCli.errors.email">Email incorrecto</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="infoGeneralCli">Informacion Adicional</label>
+                        <textarea type="text" class="form-control" formControlName="infoGeneralCli"
+                            placeholder="Informacion adicional sobre el medico"></textarea>
+                    </div>                
+                </div>
+                <br />
+                <div class="row justify-content-center">
+                    <div class="col-sm-4">
+                        <label for="direccion">Direccion</label>
+                        <textarea type="text" class="form-control" formControlName="direccionCli"
+                        placeholder="Direccion de la clinica" 
+                        [ngClass]="{ 'is-invalid': submitted && f.direccionCli.errors }" required></textarea>
+                        <div *ngIf="submitted && addClinicaForm.controls['direccionCli'].errors" class="invalid-feedback">
+                            <div *ngIf="addClinicaForm.controls['direccionCli'].errors.required">Campo obligatorio</div>
+                        </div>
+                    </div> 
+                    <div class="col-sm-4">
+                        <label for="referencia">Referencia</label>
+                        <textarea type="text" class="form-control" formControlName="referenciaCli"
+                        placeholder="Referencia" 
+                        [ngClass]="{ 'is-invalid': submitted && f.referenciaCli.errors }" required></textarea>
+                        <div *ngIf="submitted && addClinicaForm.controls['referenciaCli'].errors" class="invalid-feedback">
+                            <div *ngIf="addClinicaForm.controls['referenciaCli'].errors.required">Campo obligatorio</div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="infoGeneralCli">Informacion Adicional</label>
-                    <input type="text" formControlName="infoGeneralCli" class="form-control" 
-                        [ngClass]="{ 'is-invalid': submitted && f.infoGeneralCli.errors }" required/>
-                    <div *ngIf="submitted && addClinicaForm.controls['infoGeneralCli'].errors" class="invalid-feedback">
-                        <div *ngIf="addClinicaForm.controls['infoGeneralCli'].errors.required">Campo obligatorio</div>
+                <br />
+                <div class="row justify-content-center">              
+                    <div class="col-sm-4">
+                        <label for="provinviaCli">Provincia</label>
+                        <ng-select [items]="provincias" bindLabel="nombre" placeholder="Seleccione una provincia"
+                            [searchable]="true" bindValue="id" formControlName="provinciaSelect"
+                            required (change)="getCiudad()">
+                        </ng-select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label for="ciudadCli">Ciudad</label>
+                        <ng-select [items]="ciudades" bindLabel="nombre" placeholder="Seleccione una ciudad"
+                            [searchable]="true" bindValue="id" formControlName="ciudadSelect"
+                            required>
+                        </ng-select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="estadoCli">En Funcionamiento</label>
-                    <select class="form-control" id=estadoCli formControlName="estadoCli" required>
-                        <option value=1>Si</option>
-                        <option value=0>No</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button [disabled]="loading" class="btn btn-primary">
-                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                        Enviar
-                    </button>
+                <br />
+                <div class="row justify-content-around">
+                    <div class="col-sm-8">
+                        <button [disabled]="loading" class="btn btn-primary">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            Enviar
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>

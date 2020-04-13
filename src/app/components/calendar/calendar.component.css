@@ -1,0 +1,27 @@
+.app-top {
+  margin: 0 0 3em;
+}
+.app-calendar {
+  margin: 0 auto;
+  max-width: 900px;
+  cursor: pointer;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.owlDatTime {
+  margin: 5% 0 5% 10%;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#plusBtn:hover {
+    color: red;
+    background-color: transparent;    
+}
+
+.cus-head {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: black;
+}
+
+.btnColor {
+  background-color: #5F9EA0;
+}

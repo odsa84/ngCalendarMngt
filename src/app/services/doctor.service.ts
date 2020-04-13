@@ -17,7 +17,6 @@ export class DoctorService {
     ) { }
 
   doctorAdd(datosEntrada: any) {
-    console.log(datosEntrada)
     return this.http.post<any>(`${this.baseUrl}/InsertarDoctor`, datosEntrada)
     .pipe(map(res => {
         return res;
@@ -29,13 +28,21 @@ export class DoctorService {
       map((res: DoctorRespuesta) => res.doctores));
   }
 
-  crearEntradaInsertarDoctor(nombres: string, apellidos: string, infoGeneral: string, estado: number, 
-    clinicaDoctor: any, doctorEspecialidad: any, doctorTitulo: any): any {
+  doctores(): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/ConsultarDoctor`, {}).pipe(map(res => {
+      return res;
+    }));
+  }
+
+  crearEntradaInsertarDoctor(nombres: string, apellidos: string, telefono: string, email: string,
+    infoGeneral: string, clinicaDoctor: any, doctorEspecialidad: any, doctorTitulo: any): any {
     return {
       "nombres": nombres,
       "apellidos": apellidos,
+      "telefono": telefono,
+      "email": email,
       "infoGeneral": infoGeneral,
-      "estado": this.convertirEstado(estado),
+      "estado": true,
       "calendario": null,
       "clinicaDoctor": clinicaDoctor,
       "doctorEspecialidad": doctorEspecialidad,
@@ -43,17 +50,14 @@ export class DoctorService {
     }
   }
 
+  /*consultarPorClinica(idClinica: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/Clinica/${idClinica}`);
+  }*/
+
   consultarPorClinica(idClinica: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/Clinica/${idClinica}`)
     .pipe(map(res => {
       return res;
     }));
-  }
-
-  convertirEstado(estado: number): boolean {
-    if(estado == 1) {
-      return true;
-    }
-    return false;
   }
 }

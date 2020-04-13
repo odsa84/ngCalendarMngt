@@ -1,34 +1,84 @@
-<div class="container-fluid">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h3>Clinicas</h3>
-    </div>
-    <div class="panel-body">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Razon Social</th>
-            <th>En funcionamiento</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let cli of clinicas | async | paginate: paginationConfig">
-            <td>{{ cli.nombre }}</td>
-            <td>{{ cli.razonSocial }}</td>
-            <td>{{ cli.estado }}</td>
-            <td>
-                <!--<button (click)="deleteEmployee(employee.id)" class="btn btn-danger">Delete</button>-->
-                <button (click)="mostrarDetalles(cli.id)" class="btn btn-info" style="margin-left: 5px">Details</button>
-                <button (click)="mostrarDoctores(cli.id)" class="btn btn-info" style="margin-left: 5px">Docs</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div style="text-align: center; margin-top: 2%">
-        <pagination-controls (pageChange)="onPageChange($event)" autoHide="true" responsive="true"></pagination-controls>
+<div class="row input-group input-group-sm">
+  <div class="col-4">
+    <input class="form-control form-control-navbar" type="text" placeholder="Search" aria-label="Search"
+      [(ngModel)]="term"/>
+  </div>
+</div>
+<br />
+<div class="row">
+  <div class="col-6" *ngFor="let cli of clinicas | searchClinica:term | paginate: paginationConfig; let i = index">
+    <app-accordion [title]="cli.nombre">
+      <div class="cardBody">
+        <div class="row vertical-align">
+          <div class="col-4">
+            <img src="../../../assets/img/hospital.png" class="imgClass">
+          </div>
+          <div class="col-8 cus-content">
+            <div class="row">
+              <div class="col-6">
+                Direccion:
+              </div>
+              <div class="col-6">
+                {{ cli.direccion }}
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-6">
+                Telefono:
+              </div>
+              <div class="col-6">
+                {{ cli.telefono }}
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-6">
+                Ciudad:
+              </div>
+              <div class="col-6">
+                {{ cli.idCiudadNavigation.nombre }}
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-6">
+                Provincia:
+              </div>
+              <div class="col-6">
+                {{ cli.idProvinciaNavigation.nombre }}
+              </div>
+            </div>
+            <br />
+            <div class="row">
+              <div class="col-6">
+                Informacion General:
+              </div>
+              <div class="col-6">
+                {{ cli.infoGeneral | slice:0:40 }}{{ cli.infoGeneral.length > 40 ? ' ...' : '' }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>    
+      <div class="cardFooter">
+        <div class="row">
+          <div class="col-4">
+            <button id="doc-{{ cli.id }}" (click)="mostrarDoctores(cli.id)" class="btn btn-info" style="margin-left: 5px">Doctores</button>
+          </div>
+          <div class="col-4">
+            <button id="elem-{{ cli.id }}" [disabled]="loading" (click)="eliminar(cli)" class="btn btn-danger" style="margin-left: 5px">
+              Eliminar</button>
+          </div>
+        </div>
+      </div>
+    </app-accordion>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <div style="text-align: center; margin-top: 2%">
+      <pagination-controls (pageChange)="onPageChange($event)" autoHide="true" responsive="true"></pagination-controls>
+    </div>
   </div>
 </div>

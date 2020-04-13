@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ClinicaRespuesta } from '../entities/clinicaRespuesta';
-import { Error } from '../entities/error';
+import { EmailValidator } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +20,16 @@ export class ClinicaService {
       }));
   }
 
-  clinicaListar(idUsuario: string): Observable<any> {
+  /*clinicaListar(idUsuario: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${idUsuario}`).pipe(
       map((res: ClinicaRespuesta) => res.clinicas));
+  }*/
+
+  clinicaListar(idUsuario: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${idUsuario}`).pipe(
+      map(res => {
+        return res;
+      }));
   }
 
   clinicas(): Observable<any> {
@@ -33,21 +39,48 @@ export class ClinicaService {
       }));
   }
 
-  crearEntradaInsertarClinica(idUsuario: string, nombre: string, razonSocial: string, 
-    infoGeneral: string, estado: number): any {
+  eliminar(datosEntrada): Observable<any> {
+    console.log(datosEntrada);
+    return this.http.post<any>(`${this.baseUrl}/ActualizarClinica`, datosEntrada).pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
+  crearEntradaInsertarClinica(idUsuario: string, nombre: string, telefono: string, email: string,
+    razonSocial:  string, infoGeneral: string, direccion: string, referencia: string, idProvincia: number, 
+    idCiudad: number, estado: boolean): any {
     return {
       "idUsuario": idUsuario, 
       "nombre": nombre,
+      "telefono": telefono,
+      "email": email,
       "razonSocial": razonSocial,
       "infoGeneral": infoGeneral,
-      "estado": this.convertirEstado(estado)
+      "direccion": direccion,
+      "referencia": referencia,
+      "idCiudad": idCiudad,
+      "idProvincia": idProvincia,
+      "estado": estado
     }
   }
 
-  convertirEstado(estado: number): boolean {
-    if(estado == 1) {
-      return true;
+  crearEntradaActualizarClinica(id: number, idUsuario: string, nombre: string, telefono: string, email: string,
+    razonSocial:  string, infoGeneral: string, direccion: string, referencia: string, idProvincia: number, 
+    idCiudad: number, estado: boolean): any {
+    return {
+      "id": id,
+      "idUsuario": idUsuario, 
+      "nombre": nombre,
+      "telefono": telefono,
+      "email": email,
+      "razonSocial": razonSocial,
+      "infoGeneral": infoGeneral,
+      "direccion": direccion,
+      "referencia": referencia,
+      "idCiudad": idCiudad,
+      "idProvincia": idProvincia,
+      "estado": estado
     }
-    return false;
   }
 }

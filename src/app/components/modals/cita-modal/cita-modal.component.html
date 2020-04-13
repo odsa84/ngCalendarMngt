@@ -1,0 +1,111 @@
+<div class="row">
+    <div class="col-sm-8">
+        <h3 class="label-color">Cliente: {{nombre}}</h3>
+    </div>
+    <div class="col-sm-4">
+        <button class="close" mat-button (click)="closeModal()">X</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="cliente-info">
+            <br />
+            <div class="row cus-row">
+                <div class="col-6">
+                    <label for="nombres" class="label-color">INICIO (cita medica):</label>
+                </div>
+                <div class="col-6">
+                    <p class="p-value">{{startDate}}</p>
+                </div>
+            </div>
+            <div class="row cus-row">
+                <div class="col-6">
+                    <label for="apellidos" class="label-color">FIN (cita medica):</label>
+                </div>
+                <div class="col-6">
+                    <p class="p-value">{{endDate}}</p>
+                </div>
+            </div>
+            <div class="row cus-row">
+                <div class="col-6">
+                    <label for="apellidos" class="label-color">CEDULA:</label>
+                </div>
+                <div class="col-6">
+                    <p class="p-value">{{cedula}}</p>
+                </div>
+            </div>
+            <div class="row cus-row">
+                <div class="col-6">
+                    <label for="cedula" class="label-color">TELEFONO:</label>
+                </div>
+                <div class="col-6">
+                    <p class="p-value">{{telefono}}</p>
+                </div>
+            </div>
+            <div class="row cus-row">
+                <div class="col-6">
+                    <label for="email" class="label-color">EMAIL:</label>
+                </div>
+                <div class="col-6">
+                    <p class="p-value">{{email}}</p>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <label for="doctores" class="label-color">Doctor:</label>
+                <ng-select [items]="lstDoctores" bindLabel="nombres" placeholder="Seleccione un doctor"
+                    [searchable]="true" [(ngModel)]="selectedDoc" bindValue="id" name="doctorSelect"
+                    required class="p-value">
+                </ng-select>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <label for="estados" class="label-color">Estado de la cita:</label>
+                <ng-select [items]="lstEstados" bindLabel="nombres" placeholder="Seleccione estado de cita"
+                    [searchable]="true" [(ngModel)]="selectedEst" bindValue="id" name="estadoSelect"
+                    required class="p-value">
+                </ng-select>
+            </div>
+        </div>        
+    </div>
+    <div class="col-6">
+        <br />
+        <br />
+        <div class="row">
+            <div class="col">
+                <label for="telefono" class="label-color">Síntomas</label>
+                <textarea type="text" class="form-control p-value" [(ngModel)]="sintomas"
+                    placeholder="Sintomas que presenta el paciente"></textarea>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <label for="diagnostico" class="label-color">Diagnóstico</label>
+                <textarea type="text" class="form-control p-value" [(ngModel)]="diagnostico"
+                    placeholder="Diagnostico del medico"></textarea>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col">
+                <label for="indicaciones" class="label-color">Indicaciones</label>
+                <textarea type="text" class="form-control p-value" [(ngModel)]="indicaciones"
+                    placeholder="Indicaciones a seguir por el paciente"></textarea>
+            </div>
+        </div>
+        <br />        
+    </div>
+</div>
+<br />
+<div class="row justify-content-around" style="margin-top: 5%;">
+    <div class="col-sm-2">
+        <button (click)="onSubmit()" type="submit" class="btn btn-primary">
+            Enviar
+        </button>
+    </div>
+</div>

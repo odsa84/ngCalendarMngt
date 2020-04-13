@@ -1,0 +1,13 @@
+.form-signin
+{
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+
+    margin-top: 5%;
+
+    /*background-color:rgb(231, 229, 229);*/
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 2%;
+}

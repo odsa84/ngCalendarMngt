@@ -20,7 +20,7 @@ export class EspecialidadService {
       }));
   }
 
-  espAll(): Observable<any> {
+  especialidades(): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/ConsultarEspecialidad`, {}).pipe(
       map(res => {
         return res;

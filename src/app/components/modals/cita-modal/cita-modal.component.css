@@ -1,0 +1,25 @@
+.cliente-info {
+    margin-top: 10%;
+    border: #cdcdcd 1px solid;
+    border-radius: 2%;
+    -moz-border-radius: 2%;
+    -webkit-border-radius: 2%;
+}
+
+.cus-row {
+    margin-left: 2%;
+}
+
+.label-color {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: black;
+}
+
+.p-value {
+    font-style: italic; 
+    font-size: 13px;
+}
+
+.cus-head {
+    font-style: italic;
+}

@@ -1,0 +1,39 @@
+.contact-block {
+    margin: 5% 0 4% 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.headerColor {
+    background-color: #971A48;
+    color: white;
+    text-transform: capitalize;
+}
+
+.cardDimentions {
+    height: 90%; 
+    width: 100%;    
+}
+
+.card-colors {
+    border: 1px solid #971A48
+}
+
+.btn-class {
+    background-color: #116696;
+    color: white;
+}
+
+.btn-danger-cust {
+    background-color: #971A48;
+    color: white;
+    float: right;
+    margin: 0 4% 0 0;
+}
+
+.btn-danger-cust:hover {
+    background-color: rgb(158, 52, 91) !important;
+}
+
+.btn-class:hover {
+    background-color: #4181a7 !important;
+}

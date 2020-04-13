@@ -12,6 +12,7 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Clinica } from '../../entities/clinica';
 import { TituloService } from '../../services/titulo.service';
 import { EspecialidadService } from '../../services/especialidad.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-doctor-add',
@@ -25,9 +26,9 @@ export class DoctorAddComponent implements OnInit {
   loading: boolean = false;
   result: Observable<Error>;
 
-  selectedItemsT = [];
+  /*selectedItemsT = [];
   selectedItemsE = [];
-  selectedItemsC = [];
+  selectedItemsC = [];*/
 
   dropdownSettings = {};
 
@@ -46,16 +47,19 @@ export class DoctorAddComponent implements OnInit {
     private authSrv: AuthenticationService,
     private clinicaSrv: ClinicaService,
     private tituloSrv: TituloService,
-    private espSrv: EspecialidadService
+    private espSrv: EspecialidadService,
+    private toastr: ToastrService
   ) { 
       this.addDoctorForm = this.formBuilder.group({
       nombresDoc: ['', Validators.required],
       apellidosDoc: ['', Validators.required],      
-      estadoDoc: [1, Validators.required],
+      telefonoDoc: ['', [Validators.pattern("^[0-9]*$"), Validators.minLength(7), 
+          Validators.maxLength(15)]],
+      emailDoc: ['', Validators.email],
       titulosDoc: [0, Validators.required],
       especialidadesDoc: [0],
       clinicasDoc: [0, Validators.required],
-      infoGeneralDoc: ['', Validators.required],
+      infoGeneralDoc: [''],
     })
   }
 
@@ -85,7 +89,7 @@ export class DoctorAddComponent implements OnInit {
     err => {
     })
 
-    this.espSrv.espAll().subscribe(response => {
+    this.espSrv.especialidades().subscribe(response => {
       response.especialidades.forEach(element => {
         this.doctorEspecialidades = [...this.doctorEspecialidades, {
           item_id: element.id,
@@ -114,17 +118,18 @@ export class DoctorAddComponent implements OnInit {
       return false;
     }
     this.loading = true;
-    this.doctorSrv.doctorAdd(this.doctorSrv.crearEntradaInsertarDoctor(this.f.nombresDoc.value, this.f.apellidosDoc.value, 
-      this.f.infoGeneralDoc.value, Number.parseInt(this.f.estadoDoc.value), this.docSelectedClinicas,        
+    this.doctorSrv.doctorAdd(this.doctorSrv.crearEntradaInsertarDoctor(this.f.nombresDoc.value, 
+      this.f.apellidosDoc.value, this.f.telefonoDoc.value, this.f.emailDoc.value,
+      this.f.infoGeneralDoc.value, this.docSelectedClinicas,        
        this.docSelectedEspecialidades, this.docSelectedTitulos))    
     .subscribe(res => {
       this.loading = false;
       this.submitted = false;
       if(res.error.codigo === '00') {
         this.limpiarFormulario();
-        this.alertSrv.success("Se ingreso el doctor satisfactoriamente");
+        this.toastr.success("Correcto!!!", "Sistema!");
       } else{
-        this.alertSrv.error("Hubo un problema al ingresar el doctor, vuelva a intentarlo.");
+        this.toastr.error("Error!!!", "Sistema!");
         console.log("Error...");
       }
     });  
@@ -134,7 +139,8 @@ export class DoctorAddComponent implements OnInit {
   limpiarFormulario() {
     this.f.nombresDoc.setValue("");
     this.f.apellidosDoc.setValue("");
-    this.f.estadoDoc.setValue(1);
+    this.f.telefonoDoc.setValue("");
+    this.f.emailDoc.setValue("");
     this.f.infoGeneralDoc.setValue("");
     this.docSelectedTitulos = [];
     this.docSelectedEspecialidades = [];
@@ -206,6 +212,14 @@ export class DoctorAddComponent implements OnInit {
       if (arr[i].idClinica === id) {
         arr.splice(i--, 1);
       }
+    }
+  }
+
+  keyPress(event: any) {
+    const pattern = /[0-9\+\-\ ]/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (event.keyCode != 8 && !pattern.test(inputChar)) {
+      event.preventDefault();
     }
   }
 
