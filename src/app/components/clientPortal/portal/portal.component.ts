@@ -295,11 +295,11 @@ export class PortalComponent implements OnInit {
       }
     ];
     this.horarios.forEach(elemH => {
-      this.citasAgendadas.calendarios.forEach(elemC => {
-        if(moment(this.selectedMoment).format('YYYY-MM-DD HH:mm:ss') < moment().format('YYYY-MM-DD HH:mm:ss')
-          && elemH.horaF < moment().format('HH:mm')) {
-          elemH.estado = 'No Disponible';
-        }
+      if(moment(this.selectedMoment).format('YYYY-MM-DD HH:mm:ss') < moment().format('YYYY-MM-DD HH:mm:ss')
+        && elemH.horaF < moment().format('HH:mm')) {
+        elemH.estado = 'No Disponible';
+      }
+      this.citasAgendadas.calendarios.forEach(elemC => {        
         if(moment(elemC.inicioFechaHora).format('YYYY-MM-DD') 
           === moment(this.selectedMoment).format('YYYY-MM-DD')) {
           if(moment(elemC.inicioFechaHora).format('HH:mm') === elemH.horaI) {
