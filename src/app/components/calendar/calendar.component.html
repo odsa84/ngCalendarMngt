@@ -8,10 +8,10 @@
                         <h4 class="card-title cus-head">Ingresa Nueva Cita</h4>
                     </div>
                     <div class="card-body" style="background-color: cadetblue;">                        
-                        <label class="cus-head">Cliente:</label>
+                        <label class="cus-head">Paciente:</label>
                         <div class="row">
                             <div class="col-10 cus-head">
-                                <ng-select [items]="clientes" bindLabel="nombres" placeholder="Seleccione un cliente"
+                                <ng-select [items]="clientes" bindLabel="nombres" placeholder="Seleccione un paciente"
                                     [searchable]="true" [(ngModel)]="selectedClie" bindValue="id" name="clienteSelect"
                                     required>
                                 </ng-select>
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <br />
-                        <div class="row">
+                        <div class="row" *ngIf="this.currentUser.tipo === 'owner'">
                             <div class="col-sm-12 cus-head">
                                 <label>Doctor:</label>
                                 <ng-select [items]="lstDoctores" bindLabel="nombres" placeholder="Seleccione al doctor"
@@ -52,7 +52,7 @@
                         <br />
                         <div class="row">
                             <div class="col-4">
-                                <button (click)="onSubmit()" type="submit" class="btn btn-primary btn-block btn-flat"
+                                <button (click)="onSubmit()" type="submit" class="btn btn-primary btn-block"
                                     [disabled]="loading">
                                     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
                                     Enviar
@@ -71,14 +71,15 @@
                         <!-- THE CALENDAR -->
                         <div class='app'>
 
-                            <div class='app-top'>
-                                <button (click)='toggleVisible()' class="btn btn-block btn-flat btnColor cus-head">Mostrar todas las Citas</button>
+                            <div class='col-2' style="margin: 2% 0 0 1%" *ngIf="this.currentUser.tipo === 'owner'">
+                                <button (click)='toggleVisible()' class="btn btnColor btn-block cus-head">
+                                    Todas</button>
                             </div>
 
                             <div class='app-calendar' *ngIf="calendarVisible">
                                 <full-calendar 
                                     #calendar 
-                                    defaultView="dayGridMonth" 
+                                    defaultView="timeGridWeek" 
                                     [header]="{
                                         left: 'prev,next today',
                                         center: 'title',

@@ -55,9 +55,11 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 import { SearchPipe } from './components/clinica-lista/search.pipe';
 import { SearchPipeDoctor } from './components/doctor-lista/search.pipe';
+import { SearchPipePortal } from './components/clientPortal/portal/search.pipe';
 
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { PortalComponent } from './components/clientPortal/portal/portal.component';
+import { DoctorLoginComponent } from './components/login/doctor-login/doctor-login.component';
 
 
 export const MY_MOMENT_FORMATS = {
@@ -96,8 +98,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AccordionComponent,
     SearchPipe,
     SearchPipeDoctor,
+    SearchPipePortal,
     PortalComponent,
-    ClienteContactModalComponent
+    ClienteContactModalComponent,
+    DoctorLoginComponent
   ],
   imports: [
     BrowserModule,

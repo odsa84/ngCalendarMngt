@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { ClienteService } from '../../../services/cliente.service';
 import { CalendarService } from '../../../services/calendar.service';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
   selector: 'app-cliente-contact-modal',
@@ -31,6 +32,7 @@ export class ClienteContactModalComponent implements OnInit {
     private toastr: ToastrService,
     private clienteSrv: ClienteService,
     private calendarSrv: CalendarService,
+    private authSrv: AuthenticationService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
     ) { 
     this.contactForm = this.formBuilder.group({
@@ -66,7 +68,8 @@ export class ClienteContactModalComponent implements OnInit {
       this.clienteSrv.clientePorCedula(this.f.cedula.value).subscribe(res => {
         if(res.error.codigo === '00') {
           this.theCliente = res.clientes[0];
-          this.addCalendario();
+          //this.addCalendario();
+          this.sendEmail(this.theCliente.email);
         } else {
           this.addCliente();          
         }
@@ -74,7 +77,8 @@ export class ClienteContactModalComponent implements OnInit {
     }  else if (this.theCliente == 'empty'){ //Buscó primero pero no existe el cliente en la base
         this.addCliente();
     } else {
-      this.addCalendario();
+      //this.addCalendario();
+      this.sendEmail(this.theCliente.email);
     }     
   }
 
@@ -105,7 +109,8 @@ export class ClienteContactModalComponent implements OnInit {
       this.submitted = false;
       if(res.error.codigo === '00') {
         this.theCliente = res.clientes[0];
-        this.addCalendario();
+        //this.addCalendario();
+        this.sendEmail(res.clientes[0].email);
       } else{
         this.toastr.error("Error!!!", "Sistema!");
       }
@@ -144,8 +149,25 @@ export class ClienteContactModalComponent implements OnInit {
 
   }
 
+  sendEmail(email: string) {
+    //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';
+    let body = "Mensaje de Portal Clinicas";
+    this.authSrv.sendEmail(email, body).subscribe(res => {
+      if(res.codigo === '00') {
+        this.addCalendario();
+      }
+    }, error => {
+      this.closeModal(undefined);
+      this.toastr.error('Error de sistema! Por favor inténtelo mas tarde', 'Sistema!')
+    })
+  }
+
   closeModal(cita: any) {
-    this.dialogRef.close({event:'close', data: cita});
+    let aux = {
+      cita: cita,
+      cliente: this.theCliente
+    }
+    this.dialogRef.close({event:'close', data: aux});
     this.theCliente = null;
     //this.theClinica = null;
   }

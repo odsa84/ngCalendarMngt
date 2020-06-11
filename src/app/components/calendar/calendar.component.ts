@@ -44,6 +44,7 @@ export class CalendarComponent implements OnInit {
   loading = false; 
   dialogValue: any; 
   minDateTime: any;
+  currentUser: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -78,11 +79,6 @@ export class CalendarComponent implements OnInit {
     this.calendarWeekends = !this.calendarWeekends;
   }
 
-  gotoPast() {
-    let calendarApi = this.calendarComponent.getApi();
-    calendarApi.gotoDate('2000-01-01'); // call a method on the Calendar object
-  }
-
   eventClick(event) {
     const modalDialog = this.matDialog.open(CitaModalComponent, {
       disableClose: false,
@@ -110,31 +106,50 @@ export class CalendarComponent implements OnInit {
         citaDT: new FormControl(new Date()),
         clinicaSelect: [0, Validators.required],
         doctorSelect: [0, Validators.required]
-      });
+      });      
 
-      this.getCalendarios();
-
-      const currentUser = this.authSrv.currentUserValue;    
-      this.clinicaSrv.clinicaListar(currentUser.usuario.id).subscribe(res => {
-        res.clinicas.forEach(elem => {
-          this.clinicas = [...this.clinicas, elem];
+      this.currentUser = this.authSrv.currentUserValue;
+      if(this.currentUser.tipo === 'owner') { 
+        this.getCalendarios();   
+        this.clinicaSrv.clinicaListar(this.currentUser.usuario.id).subscribe(res => {
+          res.clinicas.forEach(elem => {
+            this.clinicas = [...this.clinicas, elem];
+          });
         });
-      });
+      } else if(this.currentUser.tipo === 'doctor') {
+        this.clinicaSrv.clinicaListarDoctor(this.currentUser.doctor.id).subscribe(res => {
+          res.clinicas.forEach(elem => {
+            this.clinicas = [...this.clinicas, elem];
+          });
+        });
+
+        this.calendarSrv.calendariosPorDoctor(this.currentUser.doctor.id).subscribe(res => {
+          if(res.error.codigo == "01") {
+            this.toastr.warning('No hay citas calendarizadas', 'Sistema!');
+          } 
+          this.fillCalendar(res);
+        });
+
+        this.selectedDoc = this.currentUser.doctor.id;
+      }
 
       this.getClientes();
   }
 
   onSubmit() {
     this.loading = true;
+    let doctorId = this.selectedDoc;
+    if(this.currentUser.tipo === 'doctor') {
+      doctorId = this.currentUser.doctor.id;
+    }
     this.calendarSrv.calendarioAdd(this.calendarSrv.crearEntradaInsertar(
       moment(this.selectedMoment).format('YYYY-MM-DDTHH:mm:ss'), 
       moment(this.selectedMoment).add(1, 'hours').format('YYYY-MM-DDTHH:mm:ss'), 
-      this.selectedDoc, this.selectedClie, this.selectedCli,
-      "", "", ""
-      )).subscribe(res => {
+      doctorId, this.selectedClie, this.selectedCli,
+      "", "", "")).subscribe(res => {
         this.loading = false;
         if(res.error.codigo === '00') {
-          this.getCalendarios();
+          this.currentUser.tipo === 'owner' ? this.getCalendarios() : this.getCalendarioPorClinica();
           this.toastr.success('Correcto!!!', 'Sistema!');
         } else{
           this.toastr.error('Error!!!', 'Sistema!');
@@ -143,11 +158,12 @@ export class CalendarComponent implements OnInit {
   }
 
   fillCalendar(res: any) {
+    console.log(res)
     this.calendarEvents = [];
     let color = '#B52D30'; //red
     res.calendarios.forEach(elem => {
-      const today = moment().format('YYYY-MM-DD HH:mm:ss');
-      if( moment(elem.finFechaHora).format('YYYY-MM-DD HH:mm:ss') > today && elem.idEstado == 1) {
+      let today = moment();
+      if( (moment(elem.finFechaHora).isAfter(today)) && (elem.idEstado === 1) ) {
         color = '#66CC44'; //green
       }
       this.calendarEvents = [...this.calendarEvents,
@@ -156,15 +172,17 @@ export class CalendarComponent implements OnInit {
           start: elem.inicioFechaHora,
           end: elem.finFechaHora,
           color: color,
+          backgroundColor: '#eeeef0',//'#eeeef0',
           extendedProps: {
             id: elem.id,
             idCliente: elem.idClienteNavigation,
             idClinica: elem.idClinicaNavigation,
-            idDoctor: elem.idDoctorNavigation,
+            idDoctor: this.currentUser.tipo === 'doctor' ? this.currentUser.doctor : elem.idDoctorNavigation,
             idEstado: elem.idEstadoNavigation,
             sintomas: elem.sintomas,
             diagnostico: elem.diagnostico,
-            indicaciones: elem.indicaciones
+            indicaciones: elem.indicaciones,
+            usuario: this.currentUser.tipo === 'owner' ? 'owner' : 'doctor'
           }             
         }
       ];

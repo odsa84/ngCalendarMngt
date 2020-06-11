@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Constantes } from '../utils/constantes';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -8,7 +9,7 @@ import { map } from 'rxjs/operators';
 })
 export class ClienteService {
 
-  private baseUrl = "http://localhost:57171/api/Cliente";
+  private baseUrl = Constantes.SERVER_URI + "api/Cliente";
 
   constructor(private http: HttpClient) { }
 

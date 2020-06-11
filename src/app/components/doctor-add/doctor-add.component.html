@@ -9,7 +9,8 @@
                         <input type="text" formControlName="nombresDoc" class="form-control"
                             [ngClass]="{ 'is-invalid': submitted && f.nombresDoc.errors }" placeholder="Nombres"
                             required />
-                        <div *ngIf="submitted && addDoctorForm.controls['nombresDoc'].errors" class="invalid-feedback">
+                        <div *ngIf="submitted && addDoctorForm.controls['nombresDoc'].errors" 
+                            class="invalid-feedback">
                             <div *ngIf="addDoctorForm.controls['nombresDoc'].errors.required">Campo obligatorio</div>
                         </div>
                     </div>
@@ -29,18 +30,25 @@
                     <div class="col-sm-4">
                         <label for="telefonoDoc">Telefono</label>
                         <input type="text" formControlName="telefonoDoc" class="form-control"
-                            (keypress)="keyPress($event)" />
+                        [ngClass]="{ 'is-invalid': submitted && f.telefonoDoc.errors }" 
+                        (keypress)="keyPress($event)" required/>
                         <div *ngIf="submitted && f.telefonoDoc.errors" class="invalid-feedback">
                             <div *ngIf="f.telefonoDoc.errors.pattern || f.telefonoDoc.errors.maxlength || 
                                 f.telefonoDoc.errors.minlength">Telefono incorrecto</div>
+                        </div>
+                        <div *ngIf="submitted && f.telefonoDoc.errors" class="invalid-feedback">
+                            <div *ngIf="f.telefonoDoc.errors.required">Campo obligatorio</div>
                         </div>
                     </div>
                     <div class="col-sm-4">
                         <label for="emailDoc">Email</label>
                         <input type="email" formControlName="emailDoc" class="form-control"
-                         [ngClass]="{ 'is-invalid': submitted && f.emailDoc.errors }" />
+                         [ngClass]="{ 'is-invalid': submitted && f.emailDoc.errors }" required/>
                          <div *ngIf="submitted && f.emailDoc.errors" class="invalid-feedback">
                             <div *ngIf="f.emailDoc.errors.email">Email incorrecto</div>
+                        </div>
+                        <div *ngIf="submitted && f.emailDoc.errors" class="invalid-feedback">
+                            <div *ngIf="f.emailDoc.errors.required">Campo obligatorio</div>
                         </div>
                     </div>                    
                 </div>

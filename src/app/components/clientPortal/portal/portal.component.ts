@@ -9,6 +9,7 @@ import { ProvinciaService } from '../../../services/provincia.service';
 import { EspecialidadService } from '../../../services/especialidad.service';
 
 import * as moment from 'moment';
+import '../../../../assets/js/smtp.js';
 
 import { PerfectScrollbarConfigInterface,
   PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
@@ -18,6 +19,9 @@ import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog';
 import { ClienteContactModalComponent } from '../../modals/cliente-contact-modal/cliente-contact-modal.component';
 import { CalendarService } from '../../../services/calendar.service';
+import { AuthenticationService } from '../../../services/authentication.service';
+
+declare let Email: any;
 
 @Component({
   selector: 'app-portal',
@@ -67,6 +71,7 @@ export class PortalComponent implements OnInit {
     private pageScrollSrv: PageScrollService,  
     private matDialog: MatDialog,  
     private calendarSrv: CalendarService,
+    private authSrv: AuthenticationService,
     @Inject(DOCUMENT) private document: any
     ) {       
       this.getProvincias();
@@ -84,8 +89,53 @@ export class PortalComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit() {
+  filtrarClinicas() {    
+    if(this.selectedCiu != null && this.selectedEsp != null) {
+      this.clinicaSrv.filtrarPorCiudadEspecialidad(this.selectedCiu, this.selectedEsp).subscribe(res => {
+        if(res.error.codigo === '00') {
+          this.clinicas = [];
+          res.clinicas.forEach(elem => {      
+            this.clinicas = [...this.clinicas, elem];
+          });
+          this.toastr.success('Filtro: ' + res.clinicas.length + ' resultados encontrados', 'Sistema!')
+        } else {
+          this.toastr.warning('No se encontraron datos para filtrar!', 'Sistema!')
+        }
+      })
+    } else if(this.selectedCiu != null) {
+      this.clinicaSrv.filtrarPorCiudad(this.selectedCiu).subscribe(res => {
+        if(res.error.codigo === '00') {
+          this.clinicas = [];
+          res.clinicas.forEach(elem => {      
+            this.clinicas = [...this.clinicas, elem];
+          });
+          this.toastr.success('Filtro: ' + res.clinicas.length + ' resultados encontrados', 'Sistema!')
+        } else {
+          this.toastr.warning('No se encontraron datos para filtrar!', 'Sistema!')
+        }
+      })
+    } else if(this.selectedEsp != null) {      
+      this.clinicaSrv.filtrarPorEspecialidad(this.selectedEsp).subscribe(res => {
+        if(res.error.codigo === '00') {
+          this.clinicas = [];
+          res.clinicas.forEach(elem => {      
+            this.clinicas = [...this.clinicas, elem];
+          });
+          this.toastr.success('Filtro: ' + res.clinicas.length + ' resultados encontrados', 'Sistema!')
+        } else {
+            this.toastr.warning('No se encontraron datos para filtrar!', 'Sistema!')
+        }
+      })
+    } else {
+      this.getClinicas();
+    }
+  }
 
+  limpiarClinicas() {
+    this.selectedProv = null;
+    this.selectedCiu = null;
+    this.selectedEsp = null;
+    this.getClinicas();
   }
 
   getClinicas() {
@@ -93,7 +143,7 @@ export class PortalComponent implements OnInit {
     this.clinicaSrv.clinicas().subscribe(res => {      
       res.clinicas.forEach(elem => {      
         this.clinicas = [...this.clinicas, elem];
-      });     
+      });  
     })    
   }
 
@@ -110,6 +160,7 @@ export class PortalComponent implements OnInit {
 
   getCiudad() {
     this.ciudades = [];
+    this.selectedCiu = null;
     this.ciudadSrv.ciudadPorProvincia(this.selectedProv).subscribe(res => {
       res.ciudades.forEach(elem => {
         this.ciudades = [...this.ciudades, {
@@ -131,10 +182,6 @@ export class PortalComponent implements OnInit {
 
   onPageChange(event) {
     this.paginationConfig.currentPage = event;
-  }
-
-  mostrarDetalles(id: number) {
-
   }
 
   mostrarDoctores(id: number) {
@@ -179,13 +226,13 @@ export class PortalComponent implements OnInit {
       }
     });
     modalDialog.afterClosed().subscribe(result => {
-      console.log(result.data)
-      if(result.data != undefined) {
+      if(result.data.cita != undefined) {
         this.hideHorarios = true;
         this.theClinica = null;
         this.theHorario = null;
         this.selectedMoment = new Date();
         this.formatedSelectedMoment = null;
+        
       }
     });
   }
@@ -307,8 +354,28 @@ export class PortalComponent implements OnInit {
           }
         }
       })
-    })
-    
-    
-  }  
+    })      
+  } 
+  
+  sendEmail(email: string) {
+    //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';
+    let body = "Mensaje de Portal Clinicas";
+    this.authSrv.sendEmail(email, body).subscribe(res => {
+      console.log('Respuesta Send Mail: ', res);
+      if(res.codigo === '00') {
+
+      }
+    }, error => (this.toastr.error('Hubo un inconveniente al enviar el correo', 'Sistema!')))
+
+    /*Email.send({
+      Host : 'smtp.elasticemail.com',
+      Username : 'odsa84@gmail.com',
+      Password : '6D1E3FA54E8A35A76E0DB79FDD0690138F98',
+      To : 'odsa84@gmail.com',
+      From : 'odsa84@gmail.com',
+      Subject : 'Cita Agendada',
+      Body : 
+      '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b> '
+      }).then( message => { alert(message); });*/
+  }
 }

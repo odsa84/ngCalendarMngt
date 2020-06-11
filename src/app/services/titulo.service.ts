@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Constantes } from '../utils/constantes';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class TituloService {
 
-  private baseUrl = "http://localhost:57171/api/Titulo";
+  private baseUrl = Constantes.SERVER_URI + "api/Titulo";
   constructor(private http: HttpClient) { }
 
   tituloAdd(titulo1: string, estado: number) {

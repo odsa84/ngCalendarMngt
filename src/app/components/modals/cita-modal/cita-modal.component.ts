@@ -33,6 +33,7 @@ export class CitaModalComponent implements OnInit {
   selectedDoc: any;
   lstEstados: any = [];
   selectedEst: any;
+  nombreClinica: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,9 +44,18 @@ export class CitaModalComponent implements OnInit {
     private estadoSrv: EstadosCitaService,
     private dialogRef: MatDialogRef<CitaModalComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
-  ) {     
-    this.getDoctores(data.cita.extendedProps.idClinica.id);
+  ) { 
+    if(data.cita.extendedProps.usuario === 'owner') {
+      this.getDoctores(data.cita.extendedProps.idClinica.id);
+    } else {
+      //this.lstDoctores = data.cita.extendedProps.idDoctor;
+      this.lstDoctores = [...this.lstDoctores, {
+        nombres: data.cita.extendedProps.idDoctor.nombres + ' ' + data.cita.extendedProps.idDoctor.apellidos,
+        id: data.cita.extendedProps.idDoctor.id
+      }];
+    }
     this.cita = data.cita;
+    this.nombreClinica = data.cita.extendedProps.idClinica.nombre
     this.startDate = moment(data.cita.start).format('YYYY-MM-DD HH:mm:ss');
     this.endDate = moment(data.cita.end).format('YYYY-MM-DD HH:mm:ss');
     this.sintomas = data.cita.extendedProps.sintomas;
@@ -115,6 +125,7 @@ export class CitaModalComponent implements OnInit {
     this.lstEstados = [];
     this.selectedEst = [];
     this.estadoSrv.estados().subscribe(res => {
+      console.log(res)
       res.estados.forEach(elem => {
         this.lstEstados = [...this.lstEstados, {
           nombres: elem.estado1,

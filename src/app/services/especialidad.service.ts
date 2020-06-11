@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Constantes } from '../utils/constantes';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class EspecialidadService {
 
-  private baseUrl = "http://localhost:57171/api/Especialidad";
+  private baseUrl = Constantes.SERVER_URI + "api/Especialidad";
   constructor(private http: HttpClient) { }
 
   espAdd(especialidad1: string, descripcion: string, estado: number) {

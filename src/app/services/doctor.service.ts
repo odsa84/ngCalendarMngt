@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Constantes } from '../utils/constantes';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DoctorRespuesta } from '../entities/doctorRespuesta';
@@ -10,7 +11,7 @@ import { Error } from '../entities/error';
 })
 export class DoctorService {
 
-  private baseUrl = "http://localhost:57171/api/Doctor";
+  private baseUrl = Constantes.SERVER_URI + "api/Doctor";
 
   constructor(
     private http: HttpClient
@@ -35,12 +36,14 @@ export class DoctorService {
   }
 
   crearEntradaInsertarDoctor(nombres: string, apellidos: string, telefono: string, email: string,
-    infoGeneral: string, clinicaDoctor: any, doctorEspecialidad: any, doctorTitulo: any): any {
+    pass: string, infoGeneral: string, clinicaDoctor: any, 
+    doctorEspecialidad: any, doctorTitulo: any): any {
     return {
       "nombres": nombres,
       "apellidos": apellidos,
       "telefono": telefono,
       "email": email,
+      "password": pass,
       "infoGeneral": infoGeneral,
       "estado": true,
       "calendario": null,

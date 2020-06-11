@@ -28,17 +28,23 @@ export class MenuSidebarComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.currentUser = this.authSrv.currentUserValue;
-    this.clinicaSrv.clinicaListar(this.currentUser.usuario.id).subscribe(res => {
-      this.clinicasCount = res.clinicas.length;
-    });
+    if(this.currentUser.tipo === 'owner') {
+      this.clinicaSrv.clinicaListar(this.currentUser.usuario.id).subscribe(res => {
+        this.clinicasCount = res.clinicas.length;
+      });  
+      
+      this.calendarSrv.citasAgendadas().subscribe(res => {
+        this.citasCount = res.calendarios.length;
+      });
 
-    this.calendarSrv.citasAgendadas().subscribe(res => {
-      this.citasCount = res.calendarios.length;
-    });
-
-    this.doctorSrv.doctores().subscribe(res => {
-      this.docsCount = res.doctores.length;
-    });
+      this.doctorSrv.doctores().subscribe(res => {
+        this.docsCount = res.doctores.length;
+      });
+    } else if(this.currentUser.tipo === 'doctor') {
+      this.clinicaSrv.clinicaListarDoctor(this.currentUser.doctor.id).subscribe(res => {
+        this.clinicasCount = res.clinicas.length;
+      });
+    }    
 
   }
 

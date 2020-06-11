@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Constantes } from '../utils/constantes';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EmailValidator } from '@angular/forms';
@@ -9,7 +10,7 @@ import { EmailValidator } from '@angular/forms';
 })
 export class ClinicaService {
 
-  private baseUrl = "http://localhost:57171/api/Clinica";
+  private baseUrl = Constantes.SERVER_URI + "api/Clinica";
   constructor(
     private http: HttpClient
     ) { }
@@ -32,8 +33,36 @@ export class ClinicaService {
       }));
   }
 
+  clinicaListarDoctor(idDoctor: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/doctor/${idDoctor}`).pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
   clinicas(): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/ConsultarClinica`, {}).pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
+  filtrarPorCiudadEspecialidad(idCiudad: number, idEsp: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/PorCiudadEsp`, {"idCiudad": idCiudad, "idEspecialidad": idEsp}).pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
+  filtrarPorCiudad(idCiudad: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/PorCiudad`, {"idCiudad": idCiudad}).pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
+  filtrarPorEspecialidad(idEsp: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/PorEspecialidad`, {"idEspecialidad": idEsp}).pipe(
       map(res => {
         return res;
       }));

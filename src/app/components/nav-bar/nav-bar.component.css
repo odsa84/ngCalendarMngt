@@ -10,3 +10,21 @@
 .font-style {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
+.imgClass {
+    width: 80px;
+    height: 80px;
+}
+
+.imgTextClass {
+    font-variant: small-caps;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    /*font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;*/
+    color: #116696;
+    text-transform: capitalize;
+    margin-left: 1%;
+}
+
+.logo {
+    margin-left: 7%;
+}

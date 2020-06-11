@@ -9,6 +9,7 @@ import { DoctorAddComponent } from './components/doctor-add/doctor-add.component
 import { DoctorListaComponent } from './components/doctor-lista/doctor-lista.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { PortalComponent } from './components/clientPortal/portal/portal.component';
+import { DoctorLoginComponent } from './components/login/doctor-login/doctor-login.component';
 
 const routes: Routes = [
   {
@@ -50,6 +51,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
+  },
+  {
+    path: 'doctor-login',
+    component: DoctorLoginComponent
   },
   
   // otherwise redirect to home

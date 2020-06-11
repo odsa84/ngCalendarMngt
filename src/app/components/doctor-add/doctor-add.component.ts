@@ -40,6 +40,8 @@ export class DoctorAddComponent implements OnInit {
   docSelectedClinicas: any = [];
   docSelectedEspecialidades: any = [];
 
+  randomPass: any;
+
   constructor(
     private formBuilder: FormBuilder,
     private doctorSrv: DoctorService,
@@ -117,11 +119,13 @@ export class DoctorAddComponent implements OnInit {
     if(!this.addDoctorForm.valid) {      
       return false;
     }
-    this.loading = true;
+    this.loading = true; 
+    this.randomPass = this.randomString(); 
+    console.log(this.randomPass);
     this.doctorSrv.doctorAdd(this.doctorSrv.crearEntradaInsertarDoctor(this.f.nombresDoc.value, 
-      this.f.apellidosDoc.value, this.f.telefonoDoc.value, this.f.emailDoc.value,
-      this.f.infoGeneralDoc.value, this.docSelectedClinicas,        
-       this.docSelectedEspecialidades, this.docSelectedTitulos))    
+      this.f.apellidosDoc.value, this.f.telefonoDoc.value, this.f.emailDoc.value, 
+      this.randomPass, this.f.infoGeneralDoc.value, this.docSelectedClinicas, 
+      this.docSelectedEspecialidades, this.docSelectedTitulos))    
     .subscribe(res => {
       this.loading = false;
       this.submitted = false;
@@ -135,6 +139,16 @@ export class DoctorAddComponent implements OnInit {
     });  
     
   }
+
+  randomString() {
+    var result = '';
+    var characters  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < 10; i++ ) {
+       result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+ }
 
   limpiarFormulario() {
     this.f.nombresDoc.setValue("");
