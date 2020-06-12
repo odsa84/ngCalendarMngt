@@ -8,7 +8,6 @@ import { tap } from 'rxjs/operators';
 import { AlertService } from '../../services/alert.service';
 import { DoctorService } from '../../services/doctor.service';
 import { ClinicaService } from '../../services/clinica.service';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { Clinica } from '../../entities/clinica';
 import { TituloService } from '../../services/titulo.service';
 import { EspecialidadService } from '../../services/especialidad.service';
