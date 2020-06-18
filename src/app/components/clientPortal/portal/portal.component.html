@@ -16,14 +16,14 @@
         <img src="../../../assets/img/Logo-Portal4.png" class="imgClass" >
     </div>
     <h1 class="imgTextClass">Portal Clínicas</h1>
-    <ul class="navbar-nav ml-auto">
-            <input class="form-control findByName" type="text" 
-                placeholder="Buscar por nombre" aria-label="Search" [(ngModel)]="term"/>
-            <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </div>
+    <ul *ngIf="currentUser !== null" class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link float-right" (click)="logout()">
+                <i class="fas fa-power-off"></i>
+            </a>
+            <a class="nav-link float-right" href="#"><i class="fa fa-fw fa-user"></i></a>
+            <a class="nav-link float-right">{{ nombreCliente }}</a>            
+        </li>
     </ul>
 </nav>
 
@@ -32,7 +32,60 @@
 <div class="panel panel-default toScrollUp">
     <div class="panel-body">        
         <div class="row">
-            <div class="col-3 buscar-block">
+            <!-- BEGIN Login form -->
+            <div *ngIf="showRegisterForm === false && currentUser === null" class="col-3 buscar-block">
+                <div class="card card-colors-login">
+                    <div class="card-header headerColorLogin">
+                        <h4 class="card-title cus-content headerColorLogin">Iniciar sesión</h4>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="loginForm">
+                            <div class="input-group mb-3">
+                                <input formControlName="email" type="email" class="form-control" placeholder="Email"/>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-envelope"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group mb-3">
+                                <input formControlName="password" type="password" class="form-control" placeholder="Password"/>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                        <span class="fas fa-lock"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="rememberMe" />
+                                        <label class="custom-control-label" for="rememberMe">Recordarme</label>
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-4">
+                                    <button (click)="onSubmitLogin()" type="submit" class="btn btn-primary"
+                                        [disabled]="submitted">
+                                        <span *ngIf="submitted" class="spinner-border spinner-border-sm mr-1"></span>
+                                        Entrar
+                                    </button>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                        </form>
+                        <p class="mb-1">
+                            <a>Olvidé mi contraseña</a>
+                        </p>
+                        <p class="mb-0">
+                            <a [routerLink]="" (click)="showRegister()" class="text-center">Registrarme</a>
+                        </p>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- END Login form -->
+            <div *ngIf="currentUser !== null" class="col-3 buscar-block">
                 <div class="card card-colors">
                     <div class="card-header headerColor">
                         <h4 class="card-title cus-content headerColor">Parámetros de búsqueda</h4>
@@ -85,10 +138,115 @@
                     </div>
                     <!-- /.card-body -->
                 </div>
+            </div>  
+            <!-- BEGIN formulario registro -->
+            <div *ngIf="showRegisterForm === true" class="col-6 buscar-block form-signin">
+                <div class="card card-colors-login">
+                    <div class="card-header headerColorLogin">
+                        <h4 class="card-title cus-content headerColorLogin">Registro</h4>
+                    </div>
+                    <div class="card-body">                        
+                        <form [formGroup]="regClienteForm">
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6">
+                                    <label for="nombres">Nombres</label>
+                                    <input type="text" formControlName="nombres" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submittedReg && regClienteForm.controls['nombres'].errors }" placeholder="Nombres"
+                                        required />
+                                    <div *ngIf="submittedReg && regClienteForm.controls['nombres'].errors" class="invalid-feedback">
+                                        <div *ngIf="regClienteForm.controls['nombres'].errors.required">Campo obligatorio</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="apellidos">Apellidos</label>
+                                    <input type="text" formControlName="apellidos" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submittedReg && regClienteForm.controls['apellidos'].errors }" placeholder="Apellidos"
+                                        required />
+                                    <div *ngIf="submittedReg && regClienteForm.controls['apellidos'].errors" class="invalid-feedback">
+                                        <div *ngIf="regClienteForm.controls['apellidos'].errors.required">Campo obligatorio</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row justify-content-center">
+                                <div class="col-sm-6">
+                                    <label for="cedula">Cédula</label>
+                                    <input type="text" formControlName="cedula" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submittedReg && regClienteForm.controls['cedula'].errors }" placeholder="Cedula" required />
+                                    <div *ngIf="submittedReg && regClienteForm.controls['cedula'].errors" class="invalid-feedback">
+                                        <div *ngIf="regClienteForm.controls['cedula'].errors.required">Campo obligatorio</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="telefono">Telefono</label>
+                                    <input type="text" formControlName="telefono" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submittedReg && regClienteForm.controls['telefono'].errors }" placeholder="telefono" />
+                                    <div *ngIf="submittedReg && regClienteForm.controls['telefono'].errors" class="invalid-feedback">
+                                        <div *ngIf="regClienteForm.controls['telefono'].errors.required">Campo obligatorio</div>
+                                    </div>
+                                </div>                    
+                            </div>
+                            <br />
+                            <div class="row">                                
+                                <div class="col-sm-6">
+                                    <label for="emailReg">Email</label>
+                                    <input type="emailReg" formControlName="emailReg" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submittedReg && regClienteForm.controls['emailReg'].errors }" placeholder="Email" />
+                                    <div *ngIf="submittedReg && regClienteForm.controls['emailReg'].errors" class="invalid-feedback">
+                                        <div *ngIf="regClienteForm.controls['emailReg'].errors">Formato invalido</div>
+                                    </div>
+                                </div>                                
+                            </div>
+                            <br />
+                            <div class="row justify-content-center">                                
+                                <div class="col-sm-6">
+                                    <label for="passwordReg">Contraseña</label>
+                                    <input type="password" formControlName="passwordReg" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submittedReg && regClienteForm.controls['passwordReg'].errors }" placeholder="Contraseña" />
+                                    <div *ngIf="submittedReg && regClienteForm.controls['passwordReg'].errors" class="invalid-feedback">
+                                        <div *ngIf="regClienteForm.controls['passwordReg'].errors">Campo obligatorio</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="confirmPass">Confirmar Contraseña</label>
+                                    <input type="password" formControlName="confirmPass" class="form-control" 
+                                        [ngClass]="{ 'is-invalid': submittedReg && regClienteForm.controls['confirmPass'].errors }" placeholder="Confirmar contraseña" />
+                                    <div *ngIf="submittedReg && regClienteForm.controls['confirmPass'].errors" class="invalid-feedback">
+                                        <div *ngIf="regClienteForm.controls['confirmPass'].errors.required">Campo requerido</div>
+                                        <div *ngIf="regClienteForm.controls['confirmPass'].errors.mustMatch">Contraseñas no coinciden</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row justify-content-center">
+                                <div class="col-sm-2">
+                                    <button  (click)="onSubmitRegister()" [disabled]="loadingReg" class="btn btn-primary">
+                                        <span *ngIf="loadingReg" class="spinner-border spinner-border-sm mr-1"></span>
+                                        Enviar
+                                    </button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-danger-cust" (click)="hideRegister()">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </div>
+                            <br />
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="col-7 buscar-block">                
+            <!-- END formulario registro -->                      
+            <div *ngIf="showRegisterForm === false" class="col-7 buscar-block">                
                 <perfect-scrollbar style="max-width: 100%; max-height: 380px;" class="scroll-container"
                     [config]="config" [scrollIndicators]="true">
+                    <div class="row">  
+                        <div class="col-6">       
+                            <input class="form-control findByName" type="text" 
+                                placeholder="Buscar por nombre" aria-label="Search" [(ngModel)]="term"/>
+                        </div>
+                    </div>
+                    <br />
                     <div class="row">
                         <div class="col-5" *ngFor="let cli of clinicas | searchPortal:term; let i = index">
                             <div class="card cardDimentions card-colors">

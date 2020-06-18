@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ClienteService } from '../../../services/cliente.service';
 import { ToastrService } from 'ngx-toastr';
+import { utilClass } from '../../../utils/utilClass';
 
 @Component({
   selector: 'app-cliente-modal',
@@ -19,7 +20,8 @@ export class ClienteModalComponent implements OnInit {
     private dialogRef: MatDialogRef<ClienteModalComponent>,
     private formBuilder: FormBuilder,
     private clienteSrv: ClienteService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private util: utilClass
     ) { 
       this.addClienteForm = this.formBuilder.group({
         nombres: ['', Validators.required],
@@ -45,15 +47,17 @@ export class ClienteModalComponent implements OnInit {
     this.loading = true;
     this.clienteSrv.clienteAdd(this.clienteSrv.crearEntradaInsertar(
       this.f.nombres.value, this.f.apellidos.value, 
-      this.f.cedula.value, this.f.email.value, this.f.telefono.value))    
+      this.f.cedula.value, this.f.email.value, this.util.randomString(), this.f.telefono.value))    
     .subscribe(res => {
       this.loading = false;
       this.submitted = false;
       if(res.error.codigo === '00') {
-        this.toastr.success("Correcto!!!", "Sistema!");
+        this.toastr.success("Ha ingresado correctamente al paciente.", "Sistema!");
         this.closeModal(res.clientes[0]);
-      } else{
-        this.toastr.error("Error!!!", "Sistema!");
+      } else if(res.error.codigo === '02'){
+        this.toastr.error("Email proporcionado ya existe.", "Sistema!");
+      } else {
+        this.toastr.error("Error, consulte al administrador.", "Sistema!");
       }
     });
   }

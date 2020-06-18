@@ -13,7 +13,7 @@ import { first } from 'rxjs/operators';
 })
 export class DoctorLoginComponent implements OnInit {
 
-  loginForm: FormGroup;
+  	loginForm: FormGroup;
 	showSpinner = false;
 	submitted = false;
 	returnUrl: string;

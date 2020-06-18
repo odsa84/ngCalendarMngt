@@ -12,6 +12,7 @@ import { Clinica } from '../../entities/clinica';
 import { TituloService } from '../../services/titulo.service';
 import { EspecialidadService } from '../../services/especialidad.service';
 import { ToastrService } from 'ngx-toastr';
+import { utilClass } from '../../utils/utilClass';
 
 @Component({
   selector: 'app-doctor-add',
@@ -49,7 +50,8 @@ export class DoctorAddComponent implements OnInit {
     private clinicaSrv: ClinicaService,
     private tituloSrv: TituloService,
     private espSrv: EspecialidadService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private util: utilClass
   ) { 
       this.addDoctorForm = this.formBuilder.group({
       nombresDoc: ['', Validators.required],
@@ -119,7 +121,7 @@ export class DoctorAddComponent implements OnInit {
       return false;
     }
     this.loading = true; 
-    this.randomPass = this.randomString(); 
+    this.randomPass = this.util.randomString();
     console.log(this.randomPass);
     this.doctorSrv.doctorAdd(this.doctorSrv.crearEntradaInsertarDoctor(this.f.nombresDoc.value, 
       this.f.apellidosDoc.value, this.f.telefonoDoc.value, this.f.emailDoc.value, 
@@ -138,16 +140,6 @@ export class DoctorAddComponent implements OnInit {
     });  
     
   }
-
-  randomString() {
-    var result = '';
-    var characters  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < 10; i++ ) {
-       result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
- }
 
   limpiarFormulario() {
     this.f.nombresDoc.setValue("");

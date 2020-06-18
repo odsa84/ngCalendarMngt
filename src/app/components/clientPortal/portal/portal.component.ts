@@ -20,6 +20,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ClienteContactModalComponent } from '../../modals/cliente-contact-modal/cliente-contact-modal.component';
 import { CalendarService } from '../../../services/calendar.service';
 import { AuthenticationService } from '../../../services/authentication.service';
+import { first } from 'rxjs/operators';
+import { ClienteService } from '../../../services/cliente.service';
 
 declare let Email: any;
 
@@ -37,8 +39,14 @@ export class PortalComponent implements OnInit {
   paginationConfig: any;
   ciudad: any;
   submitted = false;
+  submittedReg = false;
   loading = false;
-
+  loadingReg = false;
+  showSpinner = false;
+  showSpinnerReg = false;
+  showRegisterForm = false;
+  currentUser: any = null;
+  error = '';
   provincias: any = [];    
   ciudades: any = [];
   especialidades: any = [];
@@ -53,6 +61,9 @@ export class PortalComponent implements OnInit {
   formatedSelectedMoment: string;
   minDateTime: any;
   contactForm: FormGroup;
+  loginForm: FormGroup;
+  regClienteForm: FormGroup;
+  nombreCliente: string;
 
   public config: PerfectScrollbarConfigInterface = {};
 
@@ -62,6 +73,7 @@ export class PortalComponent implements OnInit {
   constructor(
     private clinicaSrv: ClinicaService,
     private doctorSrv: DoctorService,
+    private clienteSrv: ClienteService,
     private shareDataSrv: ShareDataService,
     private router: Router,
     private ciudadSrv: CiudadService,
@@ -72,6 +84,7 @@ export class PortalComponent implements OnInit {
     private matDialog: MatDialog,  
     private calendarSrv: CalendarService,
     private authSrv: AuthenticationService,
+    private formBuilder: FormBuilder,
     @Inject(DOCUMENT) private document: any
     ) {       
       this.getProvincias();
@@ -84,10 +97,82 @@ export class PortalComponent implements OnInit {
         itemsPerPage: 5,
         currentPage: 1
       };
+
+      this.currentUser = this.authSrv.currentUserValue;
+      if(this.currentUser !== null) {
+        this.nombreCliente = this.currentUser.cliente.nombres + ' ' + this.currentUser.cliente.apellidos;
+      }
     }
 
   ngOnInit() {
+    this.loginForm = this.formBuilder.group({
+			email: ['', Validators.required],
+			password: ['', Validators.required]
+    });
+
+    this.regClienteForm = this.formBuilder.group({
+      nombres: ['', Validators.required],
+      apellidos: ['', Validators.required],      
+      cedula: ['', Validators.required],
+      emailReg: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
+      passwordReg: ['', Validators.required],
+      confirmPass: ['', Validators.required],
+      telefono: ['', [Validators.pattern("^[0-9]*$"), Validators.minLength(7), 
+      Validators.maxLength(15)]]
+    }, {
+      validator: this.MustMatch('passwordReg', 'confirmPass')
+    });        
   }
+
+  onSubmitLogin() {
+		this.submitted = true;	
+		if (this.loginForm.invalid) {
+			this.submitted = false;
+			return;
+		}
+
+		this.showSpinner = true;
+		this.authSrv.loginCliente(this.f.email.value, this.f.password.value)
+			.subscribe(res => {                    
+          this.loading = false;
+          this.submitted = false;
+          this.showSpinner = false;
+          this.currentUser = this.authSrv.currentUserValue;
+          this.router.navigate(['/portal']);
+          this.limpiarLoginForm();
+          this.nombreCliente = res.cliente.nombres + ' ' + res.cliente.apellidos;
+				},
+				error => {
+					this.error = error;
+					this.showSpinner = false;
+					this.submitted = false;
+          this.toastr.error('Usuario y/o contraseña incorrectos', 'Sistema!');
+          this.limpiarLoginForm();
+				});
+  }
+  
+  onSubmitRegister() {
+		this.submittedReg = true;
+    if(!this.regClienteForm.valid) {      
+      return false;
+    }
+    this.loadingReg = true;
+    this.clienteSrv.clienteAdd(this.clienteSrv.crearEntradaInsertar(
+      this.g.nombres.value, this.g.apellidos.value, 
+      this.g.cedula.value, this.g.emailReg.value, this.g.passwordReg.value, this.g.telefono.value))    
+    .subscribe(res => {
+      this.loadingReg = false;
+      this.submittedReg = false;
+      if(res.error.codigo === '00') {
+        this.toastr.success("Gracias por registrarse al portal.", "Sistema!");
+        this.showRegisterForm = false;
+      } else if(res.error.codigo === '02'){
+        this.toastr.error("Email proporcionado ya existe.", "Sistema!");
+      } else {
+        this.toastr.error("Error!!!", "Sistema!");
+      }
+    });
+	}
 
   filtrarClinicas() {    
     if(this.selectedCiu != null && this.selectedEsp != null) {
@@ -195,18 +280,22 @@ export class PortalComponent implements OnInit {
   }  
 
   selectClinica(clinica: any) {
-    this.theClinica = clinica;
-    this.hideHorarios = false;
-    this.hideDatosCliente = true;    
-    this.horarios = [];
-    this.calendarSrv.calendariosPorClinicaAgendadas(clinica.id).subscribe(res => {      
-      this.citasAgendadas = res;
-      this.fillHorarios();
-    })
-    this.pageScrollSrv.scroll({      
-      document: this.document,
-      scrollTarget: '.horarioScroll',
-    });
+    if(this.currentUser === null) {
+      this.toastr.warning("Por favor, inicie sesión en la aplicación", "Sistema!")
+    } else {
+      this.theClinica = clinica;
+      this.hideHorarios = false;
+      this.hideDatosCliente = true;    
+      this.horarios = [];
+      this.calendarSrv.calendariosPorClinicaAgendadas(clinica.id).subscribe(res => {      
+        this.citasAgendadas = res;
+        this.fillHorarios();
+      })
+      this.pageScrollSrv.scroll({      
+        document: this.document,
+        scrollTarget: '.horarioScroll',
+      });
+    }
   }
 
   selectHorario(horario: any) {
@@ -222,6 +311,7 @@ export class PortalComponent implements OnInit {
       data: { 
         cita: horario,
         clinica: this.theClinica,
+        cliente: this.currentUser,
         selectedDate: this.selectedMoment
       }
     });
@@ -378,4 +468,48 @@ export class PortalComponent implements OnInit {
       '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b> '
       }).then( message => { alert(message); });*/
   }
+
+  showRegister() {
+    this.limpiarLoginForm();
+    this.showRegisterForm = true;
+  }
+
+  hideRegister() {
+    this.showRegisterForm = false;
+  }
+
+  MustMatch(passwor1: string, passwor2: string) {
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[passwor1];
+        const matchingControl = formGroup.controls[passwor2];
+
+        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+            // return if another validator has already found an error on the matchingControl
+            return;
+        }
+        // set error on matchingControl if validation fails
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ mustMatch: true });
+        } else {
+            matchingControl.setErrors(null);
+        }
+    }
+}
+
+logout() {
+  this.limpiarLoginForm();
+  this.authSrv.logout();
+  this.currentUser = null;
+  this.hideHorarios = true;
+  this.router.navigate(['/portal']);
+}
+
+limpiarLoginForm() {
+  this.f.email.setValue("");
+  this.f.password.setValue("");
+}
+
+  // convenience getter for easy access to form fields
+  get f() { return this.loginForm.controls; }
+  get g() { return this.regClienteForm.controls; }
 }

@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ClienteService } from '../../../services/cliente.service';
 import { CalendarService } from '../../../services/calendar.service';
 import { AuthenticationService } from '../../../services/authentication.service';
+import { utilClass } from '../../../utils/utilClass';
 
 @Component({
   selector: 'app-cliente-contact-modal',
@@ -18,6 +19,7 @@ export class ClienteContactModalComponent implements OnInit {
   theClinica: any;
   theHorario: any;
   theCliente: any = null;
+  theClient: any = null;
   submitted = false;
   loading = false;
   selectedMoment: any;
@@ -33,24 +35,25 @@ export class ClienteContactModalComponent implements OnInit {
     private clienteSrv: ClienteService,
     private calendarSrv: CalendarService,
     private authSrv: AuthenticationService,
+    private util: utilClass,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
     ) { 
-    this.contactForm = this.formBuilder.group({
-      searchContact: [''],
-      nombres: ['', Validators.required],
-      apellidos: ['', Validators.required],      
-      cedula: ['', Validators.required],
-      telefono: ['', [Validators.pattern("^[0-9]*$"), Validators.minLength(7), 
-          Validators.maxLength(15)]],
-      email: ['', Validators.email],
-    });
-
     this.theClinica = data.clinica;
     this.theHorario =  data.cita;
     this.selectedMoment = data.selectedDate;
-    console.log(this.selectedMoment)
+    this.theClient = data.cliente;
     this.formatSelectedDate(this.selectedMoment);
     this.createDateTime();
+
+    this.contactForm = this.formBuilder.group({
+      searchContact: [''],
+      nombres: [this.theClient.cliente.nombres, Validators.required],
+      apellidos: [this.theClient.cliente.apellidos, Validators.required],      
+      cedula: [this.theClient.cliente.cedula, Validators.required],
+      telefono: [this.theClient.cliente.telefono, [Validators.pattern("^[0-9]*$"), Validators.minLength(7), 
+          Validators.maxLength(15)]],
+      email: [this.theClient.cliente.email, Validators.email],
+    });
   }
 
   ngOnInit() {
@@ -74,7 +77,7 @@ export class ClienteContactModalComponent implements OnInit {
           this.addCliente();          
         }
       })      
-    }  else if (this.theCliente == 'empty'){ //Buscó primero pero no existe el cliente en la base
+    }  else if (this.theCliente == 'empty'){ //Busco primero pero no existe el cliente en la base
         this.addCliente();
     } else {
       //this.addCalendario();
@@ -92,10 +95,10 @@ export class ClienteContactModalComponent implements OnInit {
       this.loading = false;
       this.submitted = false;
       if(res.error.codigo === '00') {
-        this.toastr.success("Correcto!!!", "Sistema!");
+        this.toastr.success("Su cita médica ha sido agendada.", "Sistema!");
         this.closeModal(res);
       } else{
-        this.toastr.error("Error!!!", "Sistema!");
+        this.toastr.error("Error del sistema.", "Sistema!");
       }
     });
   }
@@ -103,7 +106,7 @@ export class ClienteContactModalComponent implements OnInit {
   addCliente() {
     this.clienteSrv.clienteAdd(this.clienteSrv.crearEntradaInsertar(
       this.f.nombres.value, this.f.apellidos.value, 
-      this.f.cedula.value, this.f.email.value, this.f.telefono.value))    
+      this.f.cedula.value, this.f.email.value, this.util.randomString(), this.f.telefono.value))    
     .subscribe(res => {
       this.loading = false;
       this.submitted = false;
@@ -111,8 +114,10 @@ export class ClienteContactModalComponent implements OnInit {
         this.theCliente = res.clientes[0];
         //this.addCalendario();
         this.sendEmail(res.clientes[0].email);
-      } else{
-        this.toastr.error("Error!!!", "Sistema!");
+      } else if(res.error.codigo === '02'){
+        this.toastr.error("Email proporcionado ya existe.", "Sistema!");
+      } else {
+        this.toastr.error("Error, consulte al administrador.", "Sistema!");
       }
     });
   }
@@ -150,8 +155,11 @@ export class ClienteContactModalComponent implements OnInit {
   }
 
   sendEmail(email: string) {
-    //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';
-    let body = "Mensaje de Portal Clinicas";
+    //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';        
+    let nombreClinica = "Su cita médica está agendada en la clinica: " + this.theClinica.nombre + ", "
+    let fechInicio = "Comiensa el día: " + this.formatedSelectedMoment + ", ";
+    let horaI = "a las: " + this.theHorario.horaI + " horas";
+    let body = nombreClinica + fechInicio + horaI;
     this.authSrv.sendEmail(email, body).subscribe(res => {
       if(res.codigo === '00') {
         this.addCalendario();

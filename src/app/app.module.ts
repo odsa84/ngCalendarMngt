@@ -61,7 +61,6 @@ import { NgHttpLoaderModule } from 'ng-http-loader';
 import { PortalComponent } from './components/clientPortal/portal/portal.component';
 import { DoctorLoginComponent } from './components/login/doctor-login/doctor-login.component';
 
-
 export const MY_MOMENT_FORMATS = {
   parseInput: 'l LT',
   fullPickerInput: 'l LT',
@@ -101,7 +100,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SearchPipePortal,
     PortalComponent,
     ClienteContactModalComponent,
-    DoctorLoginComponent
+    DoctorLoginComponent,
   ],
   imports: [
     BrowserModule,

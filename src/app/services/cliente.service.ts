@@ -62,12 +62,13 @@ export class ClienteService {
   }
 
   crearEntradaInsertar(nombres: string, apellidos: string, cedula: string, 
-    email: string, telefono: string): any {
+    email: string, password: string, telefono: string): any {
     return {
       "nombres": nombres,
       "apellidos": apellidos,
       "cedula": cedula,
       "email": email,
+      "password": password,
       "telefono": telefono,
       "estado": true
     }

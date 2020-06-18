@@ -45,7 +45,7 @@
                         <input type="email" formControlName="email" class="form-control"
                             [ngClass]="{ 'is-invalid': submitted && f.email.errors }" placeholder="Email" />
                         <div *ngIf="submitted && addClienteForm.controls['email'].errors" class="invalid-feedback">
-                            <div *ngIf="addClienteForm.controls['cedula'].errors">Formato invalido</div>
+                            <div *ngIf="addClienteForm.controls['email'].errors">Formato invalido</div>
                         </div>
                     </div>
                 </div>

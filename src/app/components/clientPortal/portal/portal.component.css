@@ -28,7 +28,7 @@
 }
 
 .buscar-block {
-    margin: 2% 0 4% 8%;
+    margin: 3% 0 4% 8%;
 }
 a.card-block { 
     cursor: pointer;
@@ -46,6 +46,12 @@ a.card-block {
     text-transform: capitalize;
 }
 
+.headerColorLogin {
+    background-color: #117DC0;
+    color: white;
+    text-transform: capitalize;
+}
+
 .cardDimentions {
     height: 90%; 
     width: 100%;    
@@ -53,6 +59,10 @@ a.card-block {
 
 .card-colors {
     border: 1px solid #971A48
+}
+
+.card-colors-login {
+    border: 1px solid #117DC0
 }
 
 .btn-class {
@@ -120,4 +130,15 @@ a.card-block {
 .findByName {
     width: 70%;
     align-content: center;
+}
+
+input.findByName {
+    border-color: #971A48;
+}
+
+.form-signin
+{
+    max-width: 800px;
+    margin: auto;
+    padding: 10px;
 }
