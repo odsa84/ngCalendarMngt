@@ -99,6 +99,7 @@ export class PortalComponent implements OnInit {
       };
 
       this.currentUser = this.authSrv.currentUserValue;
+      console.log(this.currentUser);
       if(this.currentUser !== null) {
         this.nombreCliente = this.currentUser.cliente.nombres + ' ' + this.currentUser.cliente.apellidos;
       }
