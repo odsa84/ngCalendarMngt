@@ -57,8 +57,7 @@ export class LoginComponent implements OnInit {
 		this.showSpinner = true;
 		this.authenticationService.login(this.f.email.value, this.f.password.value)
 			.pipe(first())
-			.subscribe(
-				data => {
+			.subscribe(data => {
 					this.router.navigate([this.returnUrl]);
 				},
 				error => {

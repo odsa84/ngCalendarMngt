@@ -1,0 +1,144 @@
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
+
+.imgClass {
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+}
+
+.cus-content {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: black;
+    font-size: 16px;
+}
+
+.fa-bars {
+    cursor: pointer;
+  }
+  
+.nav-link {
+    cursor: pointer;
+}
+
+.font-style{
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.buscar-block {
+    margin: 3% 0 4% 8%;
+}
+a.card-block { 
+    cursor: pointer;
+    color: black;
+}
+
+.pointerCursor {
+    /*cursor: pointer;*/
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.headerColor {
+    background-color: #971A48;
+    color: white;
+    text-transform: capitalize;
+}
+
+.headerColorLogin {
+    background-color: #117DC0;
+    color: white;
+    text-transform: capitalize;
+}
+
+.cardDimentions {
+    height: 90%; 
+    width: 100%;    
+}
+
+.card-colors {
+    border: 1px solid #971A48
+}
+
+.card-colors-login {
+    border: 1px solid #117DC0
+}
+
+.btn-class {
+    background-color: #116696;
+    color: white;
+}
+
+.btn-danger-cust {
+    background-color: #971A48;
+    color: white;
+    float: right;
+    margin: 0 4% 0 0;
+}
+
+.btn-danger-cust:hover {
+    background-color: rgb(158, 52, 91) !important;
+}
+
+.btn-class:hover {
+    background-color: #4181a7 !important;
+}
+
+.footer-class {
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    color: #869099;
+    padding: 1rem;
+}
+
+.red-row-class {
+    background-color: rgb(231, 157, 184);
+}
+
+.green-row-class {
+    background-color: rgb(208, 245, 208)
+}
+
+.calendar-block {
+    margin: 5% 5% 4% 15%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.contact-block {
+    margin: 5% 0 4% 15%;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.owl-block {
+    margin: 0 0 0 0;
+}
+
+.imgTextClass {
+    font-variant: small-caps;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    /*font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;*/
+    color: #116696;
+    text-transform: capitalize;
+    margin-left: 1%;
+}
+
+.logo {
+    margin-left: 7%;
+}
+
+.findByName {
+    width: 70%;
+    align-content: center;
+}
+
+input.findByName {
+    border-color: #971A48;
+}
+
+.form-signin
+{
+    max-width: 700px;
+    margin: auto;
+    padding: 10px;
+}

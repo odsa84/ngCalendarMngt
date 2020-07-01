@@ -70,9 +70,13 @@
       </div>
       <div class="cardFooter">
         <div class="row">
-          <div class="col-6">
-            <button id="elem-{{ doc.id }}" [disabled]="loading" (click)="eliminar(doc)" class="btn btn-danger" style="margin-left: 5px">
+          <div class="col-4">
+            <button id="elem-{{ doc.docs.id }}" [disabled]="loading" (click)="eliminar(doc)" class="btn btn-danger" style="margin-left: 5px">
               Eliminar</button>
+          </div>
+          <div class="col-6">
+            <button id="hor-{{ doc.docs.id }}" [disabled]="loading" (click)="mostrarHorarioDoctor(doc)" class="btn btn-success" style="margin-left: 5px">
+              Horarios</button>
           </div>
         </div>
       </div>

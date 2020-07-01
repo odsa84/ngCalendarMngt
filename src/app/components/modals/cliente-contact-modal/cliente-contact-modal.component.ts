@@ -95,7 +95,7 @@ export class ClienteContactModalComponent implements OnInit {
       this.loading = false;
       this.submitted = false;
       if(res.error.codigo === '00') {
-        this.toastr.success("Su cita médica ha sido agendada.", "Sistema!");
+        this.toastr.success("Su cita médica ha sido agendada. Se le envió un correo con el detalle", "Sistema!");
         this.closeModal(res);
       } else{
         this.toastr.error("Error del sistema.", "Sistema!");
@@ -157,8 +157,8 @@ export class ClienteContactModalComponent implements OnInit {
   sendEmail(email: string) {
     //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';        
     let nombreClinica = "Su cita médica está agendada en la clinica: " + this.theClinica.nombre + ", "
-    let fechInicio = "Comiensa el día: " + this.formatedSelectedMoment + ", ";
-    let horaI = "a las: " + this.theHorario.horaI + " horas";
+    let fechInicio = "el día " + this.formatedSelectedMoment + ", ";
+    let horaI = "a las " + this.theHorario.horaI + " horas";
     let body = nombreClinica + fechInicio + horaI;
     this.authSrv.sendEmail(email, body).subscribe(res => {
       if(res.codigo === '00') {

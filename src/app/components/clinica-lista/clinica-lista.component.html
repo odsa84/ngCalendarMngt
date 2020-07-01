@@ -64,7 +64,8 @@
       <div class="cardFooter">
         <div class="row">
           <div class="col-4">
-            <button id="doc-{{ cli.id }}" (click)="mostrarDoctores(cli.id)" class="btn btn-info" style="margin-left: 5px">Doctores</button>
+            <button id="doc-{{ cli.id }}" (click)="mostrarDoctores(cli.id)" class="btn btn-info" style="margin-left: 5px">
+              Doctores</button>
           </div>
           <div class="col-4">
             <button id="elem-{{ cli.id }}" [disabled]="loading" (click)="eliminar(cli)" class="btn btn-danger" style="margin-left: 5px">

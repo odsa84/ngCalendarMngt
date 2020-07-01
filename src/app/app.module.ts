@@ -60,6 +60,9 @@ import { SearchPipePortal } from './components/clientPortal/portal/search.pipe';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { PortalComponent } from './components/clientPortal/portal/portal.component';
 import { DoctorLoginComponent } from './components/login/doctor-login/doctor-login.component';
+import { RecuperarComponent } from './components/clientPortal/recuperar-contrasenia/recuperar/recuperar.component';
+import { PerfilPacienteComponent } from './components/clientPortal/perfil-paciente/perfil-paciente.component';
+import { HorasLaboralesComponent } from './components/horas-laborales/horas-laborales.component';
 
 export const MY_MOMENT_FORMATS = {
   parseInput: 'l LT',
@@ -101,6 +104,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PortalComponent,
     ClienteContactModalComponent,
     DoctorLoginComponent,
+    RecuperarComponent,
+    PerfilPacienteComponent,
+    HorasLaboralesComponent,
   ],
   imports: [
     BrowserModule,

@@ -47,6 +47,13 @@ export class ClinicaService {
       }));
   }
 
+  clinicaPorId(id: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/ClinicaPorId`, {"id": id}).pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
   filtrarPorCiudadEspecialidad(idCiudad: number, idEsp: number): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/PorCiudadEsp`, {"idCiudad": idCiudad, "idEspecialidad": idEsp}).pipe(
       map(res => {

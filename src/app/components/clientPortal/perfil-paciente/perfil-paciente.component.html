@@ -1,0 +1,112 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="logo">
+        <img src="../../../assets/img/Logo-Portal4.png" class="imgClass" >
+    </div>
+    <h1 class="imgTextClass">Portal Clínicas</h1>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a [routerLink]="['/portal']" class="nav-link">Inicio</a>
+        </li>
+        <li class="nav-item">
+            <a (click)="showPassChangeForm()" class="nav-link">Cambiar Contraseña</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link float-right" (click)="logout()">
+                <i class="fas fa-power-off"></i>
+            </a>
+           <!-- <a class="nav-link float-right" href="#"><i class="fa fa-fw fa-user"></i></a>
+            <a class="nav-link float-right">{{ nombreCliente }}</a>   -->
+        </li>        
+    </ul>
+</nav>
+<br />
+<div *ngIf="showPassChange === true" class="col-6 buscar-block form-signin">
+    <div class="card card-colors-login">
+        <div class="card-header headerColorLogin">
+            <h4 class="card-title cus-content headerColorLogin">Cambiar contraseña</h4>
+        </div>
+        <div class="card-body">                        
+            <form [formGroup]="recuperarForm">
+                <div class="row justify-content-center">                                
+                    <div class="col-sm-6">
+                        <label for="passwordAnt">Contraseña Anterior (la enviada al correo)</label>
+                        <input type="password" formControlName="passwordAnt" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && recuperarForm.controls['passwordAnt'].errors }" placeholder="Contraseña anterior" />
+                        <div *ngIf="submitted && recuperarForm.controls['passwordAnt'].errors" class="invalid-feedback">
+                            <div *ngIf="recuperarForm.controls['passwordAnt'].errors">Campo obligatorio</div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row justify-content-center">                                
+                    <div class="col-sm-6">
+                        <label for="passwordNew">Contraseña Nueva</label>
+                        <input type="password" formControlName="passwordNew" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && recuperarForm.controls['passwordNew'].errors }" placeholder="Contraseña" />
+                        <div *ngIf="submitted && recuperarForm.controls['passwordNew'].errors" class="invalid-feedback">
+                            <div *ngIf="recuperarForm.controls['passwordNew'].errors">Campo obligatorio</div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row justify-content-center"> 
+                    <div class="col-sm-6">
+                        <label for="confirmPass">Confirmar Contraseña</label>
+                        <input type="password" formControlName="confirmPass" class="form-control" 
+                            [ngClass]="{ 'is-invalid': submitted && recuperarForm.controls['confirmPass'].errors }" placeholder="Confirmar contraseña" />
+                        <div *ngIf="submitted && recuperarForm.controls['confirmPass'].errors" class="invalid-feedback">
+                            <div *ngIf="recuperarForm.controls['confirmPass'].errors.required">Campo obligatorio</div>
+                            <div *ngIf="recuperarForm.controls['confirmPass'].errors.mustMatch">Contraseñas no coinciden</div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row justify-content-center">
+                    <div class="col-sm-2">
+                        <button  (click)="onSubmit()" [disabled]="loading" class="btn btn-primary">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            Enviar
+                        </button>
+                    </div>
+                    <!--<div class="col-sm-2">
+                        <button class="btn btn-danger-cust" (click)="hideRegister()">
+                            Cancelar
+                        </button>
+                    </div>-->
+                </div>
+                <br />
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--<div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3>Doctores</h3>
+    </div>
+    <div class="panel-body">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Informacion General</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doc of doctores | async | paginate: paginationConfig | filter:term">
+            <td>{{ doc.nombres }}</td>
+            <td>{{ doc.apellidos }}</td>
+            <td>{{ doc.infoGeneral | slice:0:40 }}{{ doc.infoGeneral.length > 40 ? ' ...' : '' }}</td>
+            <td>
+                <button (click)="mostrarDetalles(doc.id)" class="btn btn-info" style="margin-left: 5px">Details</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="text-align: center; margin-top: 2%">
+        <pagination-controls (pageChange)="onPageChange($event)" autoHide="true" responsive="true"></pagination-controls>
+      </div>
+    </div>    
+  </div>-->

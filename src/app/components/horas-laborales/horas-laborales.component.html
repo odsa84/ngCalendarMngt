@@ -1,0 +1,271 @@
+<!--<div class="panel-body table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>día 1</th>
+                <th>día 2</th>
+                <th>día 3</th>
+                <th>día 4</th>
+                <th>día 5</th>
+                <th>día 6</th>
+                <th>día 7</th>
+                <th>día 8</th>
+                <th>día 9</th>
+                <th>día 10</th>
+                <th>día 11</th>
+                <th>día 12</th>
+                <th>día 13</th>
+                <th>día 14</th>
+                <th>día 15</th>
+                <th>día 16</th>
+                <th>día 17</th>
+                <th>día 18</th>
+                <th>día 19</th>
+                <th>día 20</th>
+                <th>día 21</th>
+                <th>día 22</th>
+                <th>día 23</th>
+                <th>día 24</th>
+                <th>día 25</th>
+                <th>día 26</th>
+                <th>día 27</th>
+                <th>día 28</th>
+                <th>día 29</th>
+                <th>día 30</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr [ngClass]="{ 'red-row-class' : h.estado != 'Disponible', 'green-row-class' : h.estado == 'Disponible' }"
+                *ngFor="let h of horarios">
+                <td>{{ h.horaI }} - {{h.horaF}}</td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+                <td>
+                    <button *ngIf="mostrarSi === false" (click)="noLaborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">No</button>
+                    <button *ngIf="mostrarSi === true" (click)="laborable(h)" class="btn btn-class"
+                        style="margin-left: 5px">Si</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>-->
+<div class="row">
+<div class="col-8">
+    <div class="card card-primary">
+        <div class="card-body p-0">
+            <!-- THE CALENDAR -->
+            <div class='app'>
+                <div class='app-calendar' *ngIf="calendarVisible">
+                    <full-calendar 
+                        #calendar 
+                        deepChangeDetection="true"
+                        defaultView="timeGridWeek" 
+                        [header]="{
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+                        }" 
+                        [plugins]="calendarPlugins" 
+                        [weekends]="calendarWeekends" 
+                        [events]="calendarEvents"
+                        (eventClick)="eventClick($event)"
+                        (dateClick)="dateClick($event)" ></full-calendar>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.card -->
+</div>
+<div class="col-4">
+    <div class="row">
+        <ng-select [items]="clinicas" bindLabel="nombre" placeholder="Seleccione una clínica"
+            [searchable]="true" [(ngModel)]="selectedCli" (change)="getHorarios()"
+            bindValue="id" name="clinicaSelect" required>
+        </ng-select>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-3">
+            <button (click)="onSubmit()" type="submit" class="btn btn-primary btn-block"
+                [disabled]="loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                Enviar
+            </button>
+        </div>
+    </div>
+</div>
+</div>

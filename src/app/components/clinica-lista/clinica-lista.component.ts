@@ -15,7 +15,6 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ClinicaListaComponent implements OnInit {
 
-  //clinicas: Observable<Clinica[]>;
   term: string
   clinicas: any = [];
   paginationConfig: any;

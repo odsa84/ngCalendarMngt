@@ -10,6 +10,9 @@ import { DoctorListaComponent } from './components/doctor-lista/doctor-lista.com
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { PortalComponent } from './components/clientPortal/portal/portal.component';
 import { DoctorLoginComponent } from './components/login/doctor-login/doctor-login.component';
+import { RecuperarComponent } from './components/clientPortal/recuperar-contrasenia/recuperar/recuperar.component';
+import { PerfilPacienteComponent } from './components/clientPortal/perfil-paciente/perfil-paciente.component';
+import { HorasLaboralesComponent } from './components/horas-laborales/horas-laborales.component';
 
 const routes: Routes = [
   {
@@ -41,7 +44,15 @@ const routes: Routes = [
         path: 'calendario',
         component: CalendarComponent,
         canActivate: [AuthGuard]
-      }
+      },
+      {
+        path: 'portal/perfil-paciente',
+        component: PerfilPacienteComponent
+      },
+      {
+        path: 'horas-laborales',
+        component: HorasLaboralesComponent
+      },
     ]
   },
   {
@@ -55,6 +66,14 @@ const routes: Routes = [
   {
     path: 'doctor-login',
     component: DoctorLoginComponent
+  },
+  {
+    path: 'portal/cambiar-contrasenia',
+    component: RecuperarComponent
+  },
+  {
+    path: 'perfil-paciente',
+    component: PerfilPacienteComponent
   },
   
   // otherwise redirect to home

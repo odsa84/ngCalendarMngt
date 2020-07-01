@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Doctor } from '../../entities/doctor';
 import { DoctorService } from '../../services/doctor.service';
 import { ShareDataService } from '../../services/share-data.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { parse } from 'querystring';
 
 @Component({
@@ -23,7 +23,8 @@ export class DoctorListaComponent implements OnInit {
   constructor(
     private doctorSrv: DoctorService,
     private shareDataSrv: ShareDataService,
-    private actRoute: ActivatedRoute
+    private actRoute: ActivatedRoute,
+    private router: Router
   ) { 
             
   }
@@ -71,6 +72,13 @@ export class DoctorListaComponent implements OnInit {
     })    
   }
 
+  mostrarHorarioDoctor(objDoc: any) {
+    console.log(objDoc)
+    this.router.navigate(['/horas-laborales'], {
+      queryParams: {doctor: objDoc.docs.id, clinica: objDoc.clinicas[0].idClinica},
+    })
+  }
+
   onPageChange(event) {
     this.paginationConfig.currentPage = event;
   }
@@ -80,7 +88,7 @@ export class DoctorListaComponent implements OnInit {
   }
 
   eliminar(doc: any) {
-
+    console.log(doc)
   }
 
 }

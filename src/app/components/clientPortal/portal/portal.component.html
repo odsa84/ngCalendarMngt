@@ -21,9 +21,9 @@
             <a class="nav-link float-right" (click)="logout()">
                 <i class="fas fa-power-off"></i>
             </a>
-            <a class="nav-link float-right" href="#"><i class="fa fa-fw fa-user"></i></a>
+            <a class="nav-link float-right" routerLink="/perfil-paciente"><i class="fa fa-fw fa-user"></i></a>
             <a class="nav-link float-right">{{ nombreCliente }}</a>            
-        </li>
+        </li>        
     </ul>
 </nav>
 
@@ -75,7 +75,7 @@
                             </div>
                         </form>
                         <p class="mb-1">
-                            <a>Olvidé mi contraseña</a>
+                            <a [routerLink]="" (click)="recuperarPass()">Olvidé mi contraseña</a>
                         </p>
                         <p class="mb-0">
                             <a [routerLink]="" (click)="showRegister()" class="text-center">Registrarme</a>

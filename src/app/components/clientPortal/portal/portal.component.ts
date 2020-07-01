@@ -22,6 +22,7 @@ import { CalendarService } from '../../../services/calendar.service';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { first } from 'rxjs/operators';
 import { ClienteService } from '../../../services/cliente.service';
+import { utilClass } from '../../../utils/utilClass';
 
 declare let Email: any;
 
@@ -85,6 +86,7 @@ export class PortalComponent implements OnInit {
     private calendarSrv: CalendarService,
     private authSrv: AuthenticationService,
     private formBuilder: FormBuilder,
+    private utilClass: utilClass,
     @Inject(DOCUMENT) private document: any
     ) {       
       this.getProvincias();
@@ -99,15 +101,14 @@ export class PortalComponent implements OnInit {
       };
 
       this.currentUser = this.authSrv.currentUserValue;
-      console.log(this.currentUser);
-      if(this.currentUser !== null) {
+      if(this.currentUser !== null && this.currentUser.tipo === 'client') {
         this.nombreCliente = this.currentUser.cliente.nombres + ' ' + this.currentUser.cliente.apellidos;
       }
     }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-			email: ['', Validators.required],
+			email: ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
 			password: ['', Validators.required]
     });
 
@@ -246,7 +247,6 @@ export class PortalComponent implements OnInit {
 
   getCiudad() {
     this.ciudades = [];
-    this.selectedCiu = null;
     this.ciudadSrv.ciudadPorProvincia(this.selectedProv).subscribe(res => {
       res.ciudades.forEach(elem => {
         this.ciudades = [...this.ciudades, {
@@ -448,13 +448,12 @@ export class PortalComponent implements OnInit {
     })      
   } 
   
-  sendEmail(email: string) {
-    //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';
-    let body = "Mensaje de Portal Clinicas";
+  sendEmail(email: string, pass: string) {
+    //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';  
+    let body = "Esta es su nueva contraseña " + pass;
     this.authSrv.sendEmail(email, body).subscribe(res => {
-      console.log('Respuesta Send Mail: ', res);
       if(res.codigo === '00') {
-
+        this.toastr.success('Se le ha enviado un correo con su nueva contraseña', 'Sistema!')
       }
     }, error => (this.toastr.error('Hubo un inconveniente al enviar el correo', 'Sistema!')))
 
@@ -479,22 +478,39 @@ export class PortalComponent implements OnInit {
     this.showRegisterForm = false;
   }
 
-  MustMatch(passwor1: string, passwor2: string) {
-    return (formGroup: FormGroup) => {
-        const control = formGroup.controls[passwor1];
-        const matchingControl = formGroup.controls[passwor2];
+MustMatch(passwor1: string, passwor2: string) {
+  return (formGroup: FormGroup) => {
+      const control = formGroup.controls[passwor1];
+      const matchingControl = formGroup.controls[passwor2];
 
-        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
-            // return if another validator has already found an error on the matchingControl
-            return;
-        }
-        // set error on matchingControl if validation fails
-        if (control.value !== matchingControl.value) {
-            matchingControl.setErrors({ mustMatch: true });
-        } else {
-            matchingControl.setErrors(null);
-        }
-    }
+      if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+          // return if another validator has already found an error on the matchingControl
+          return;
+      }
+      // set error on matchingControl if validation fails
+      if (control.value !== matchingControl.value) {
+          matchingControl.setErrors({ mustMatch: true });
+      } else {
+          matchingControl.setErrors(null);
+      }
+  }
+}
+
+recuperarPass() {
+  if(this.f.email.value === null || this.f.email.value === '') {
+    this.toastr.warning("Por favor, ingrese su correo en el campo Email y luego hago click en 'Olvidé mi contraseña'", 'Sistema!');
+  } else { 
+    let generatedPass = this.utilClass.randomString();
+    this.authSrv.changePasswordSistema(this.f.email.value, generatedPass).subscribe(res => {
+      if(res.error.codigo === '00') {
+        this.sendEmail(this.f.email.value, generatedPass);
+      } else if(res.error.codigo == '02') {
+        this.toastr.error(res.error.mensaje, 'Sistema!');
+      } else {
+        this.toastr.error('Se produjo un error, inténtelo más tarde.', 'Sistema!');
+      }
+    })    
+  }
 }
 
 logout() {

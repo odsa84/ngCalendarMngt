@@ -61,6 +61,14 @@ export class CalendarService {
       }));
   }
 
+  calendariosPorCliente(idCliente: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/PorCliente`, {"id": idCliente})
+    .pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
   citasAgendadas(): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/CitasAgendadas`, {})
     .pipe(

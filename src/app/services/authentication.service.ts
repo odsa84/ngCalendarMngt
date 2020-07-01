@@ -69,6 +69,22 @@ export class AuthenticationService {
       }));
   }
 
+  changePasswordSistema(username: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/changePasswordSistema`, { username, password })
+      .pipe(
+        map(res => {
+         return res;
+        }));
+  }
+
+  changePasswordPaciente(email: string, oldPassword: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/changePasswordPaciente`, { email, oldPassword, newPassword })
+      .pipe(
+        map(res => {
+         return res;
+        }));
+  }
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
