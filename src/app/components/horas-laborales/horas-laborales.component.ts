@@ -25,6 +25,8 @@ export class HorasLaboralesComponent implements OnInit {
   selectedCli: any = null;
   loading = false;
   toDeleteEvent: any = [];
+  doctorId: number;
+  clinicaId: number
 
   constructor(
     private clinicaSrv: ClinicaService,
@@ -34,20 +36,22 @@ export class HorasLaboralesComponent implements OnInit {
     private horasLaboralesSrv: HorasLaboralesService,
     private actRoute: ActivatedRoute,
   ) { 
-    this.currentUser = this.authSrv.currentUserValue;    
+    this.currentUser = this.authSrv.currentUserValue; 
 
     if(this.currentUser.tipo !== null && this.currentUser.tipo === 'doctor') {
       this.consultarHorariosPorDoctor(this.currentUser.doctor.id);
       this.consultarClinicasPorDoctor(this.currentUser.doctor.id);
+      this.doctorId = this.currentUser.doctor.id
     } else {
       this.actRoute.queryParams.subscribe((res)=> { 
         if(res.doctor != undefined && res.clinica != undefined) {
           this.consultarHorarioPorDoctorClinica(res.doctor, res.clinica)
           this.consultarClinicasPorDoctor(res.doctor);
+          this.doctorId = Number(res.doctor);
           this.selectedCli = Number(res.clinica);
         }
       }); 
-    }
+    } 
   }
 
   @ViewChild('calendar', {static: false}) calendarComponent: FullCalendarComponent; // the #calendar in the template
@@ -143,31 +147,34 @@ export class HorasLaboralesComponent implements OnInit {
   }
 
   dateClick(event) {
-    let startDateHour = moment(event.date).format('YYYY-MM-DD HH:mm:ss');
-    let endDateHour = moment(event.date).add(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
-    let startHour = moment(event.date).format('HH:mm');
-    let endHour = moment(event.date).add(1, 'hours').format('HH:mm');
-    let justDate = moment(event.date).format('YYYY-MM-DD');
-    let id = this.selectedCli + moment(event.date).format('HHmmss') + moment(event.date).add(1, 'hours').format('HHmmss') + moment(event.date).format('YYYYMMDD');
-
-    this.horas = [...this.horas, {
-      id: id,
-      horaInicio: startHour,
-      horaFin: endHour,
-      fecha: justDate
-    }];    
-
-    this.calendarEvents = [...this.calendarEvents,
-    { 
-      start: startDateHour,
-      end: endDateHour,
-      color: '#66CC44',
-      backgroundColor: '#66CC44',
-      extendedProps: {
+    if(this.selectedCli === null) {
+      this.toastr.error('Seleccione una clinica por favor.', 'Sistema!');
+    } else {
+      let startDateHour = moment(event.date).format('YYYY-MM-DD HH:mm:ss');
+      let endDateHour = moment(event.date).add(1, 'hours').format('YYYY-MM-DD HH:mm:ss');
+      let startHour = moment(event.date).format('HH:mm');
+      let endHour = moment(event.date).add(1, 'hours').format('HH:mm');
+      let justDate = moment(event.date).format('YYYY-MM-DD');
+      let id = this.selectedCli.toString() + this.doctorId.toString() + moment(event.date).format('HHmmss') + moment(event.date).add(1, 'hours').format('HHmmss') + moment(event.date).format('YYYYMMDD');    
+      this.horas = [...this.horas, {
         id: id,
-        enBase: 0
-      }         
-    }];
+        horaInicio: startHour,
+        horaFin: endHour,
+        fecha: justDate
+      }];    
+
+      this.calendarEvents = [...this.calendarEvents,
+      { 
+        start: startDateHour,
+        end: endDateHour,
+        color: '#66CC44',
+        backgroundColor: '#66CC44',
+        extendedProps: {
+          id: id,
+          enBase: 0
+        }         
+      }];
+    }
   }
 
   onSubmit() {
@@ -175,15 +182,19 @@ export class HorasLaboralesComponent implements OnInit {
       this.toastr.error('Debe seleccionar una clinica.', 'Sistema!');
     } else {
       this.loading = true;
-      if(this.currentUser.tipo !== null && this.currentUser.tipo === 'doctor') {
-        this.sendToSave(this.currentUser.doctor.id);
-      } else {
-        this.actRoute.queryParams.subscribe((res)=> { 
-          if(res.doctor != undefined) {
-            this.sendToSave(res.doctor);
-          }
-        }); 
-      }
+      this.horasLaboralesSrv.horasLaboralesAdd(this.toDeleteEvent, this.horas, this.doctorId,
+        this.selectedCli).subscribe(res => {
+       this.loading = false;
+       this.toastr.success('Hemos guardado los datos correctamente', 'Sistema!');
+       this.horas = [];
+       this.toDeleteEvent = [];        
+      this.consultarHorariosPorDoctor(this.doctorId);
+     }, error => {
+       this.loading = false;
+       this.toastr.error('Error de sistema, contacte al administrador.', 'Sistema!');
+       this.horas = [];
+       this.toDeleteEvent = [];
+     })
     }
   }
 
@@ -200,27 +211,7 @@ export class HorasLaboralesComponent implements OnInit {
   }
 
   sendToSave(idDoctor: number) {
-    this.horasLaboralesSrv.horasLaboralesAdd(this.toDeleteEvent, this.horas, idDoctor,
-      this.selectedCli).subscribe(res => {
-     this.loading = false;
-     this.toastr.success('Hemos guardado los datos correctamente', 'Sistema!');
-     this.horas = [];
-     this.toDeleteEvent = [];        
-     if(this.currentUser.tipo !== null && this.currentUser.tipo === 'doctor') {
-       this.consultarHorariosPorDoctor(this.currentUser.doctor.id);
-     } else {
-       this.actRoute.queryParams.subscribe((res)=> { 
-         if(res.doctor != undefined) {
-           this.consultarHorariosPorDoctor(res.doctor);
-         }
-       }); 
-     }
-   }, error => {
-     this.loading = false;
-     this.toastr.error('Error de sistema, contacte al administrador.', 'Sistema!');
-     this.horas = [];
-     this.toDeleteEvent = [];
-   })
+    
   }
 
   noLaborable(hor: any) {

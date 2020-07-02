@@ -27,7 +27,7 @@ export class AuthenticationService {
    }
 
    login(username: string, password: string) {
-    return this.http.post<any>(`${this.baseUrl}/login`, { username, password })
+    return this.http.post<any>(this.baseUrl + '/login', { username, password })
       .pipe(map(user => {
         // login successful if there's a jwt token in the response
         if (user && user.token) {
@@ -41,7 +41,7 @@ export class AuthenticationService {
   }
 
   loginDoctor(username: string, password: string) {
-    return this.http.post<any>(`${this.baseUrl}/loginDoctor`, { username, password })
+    return this.http.post<any>(this.baseUrl + '/loginDoctor', { username, password })
       .pipe(map(user => {
         // login successful if there's a jwt token in the response
         if (user && user.token) {
@@ -55,7 +55,7 @@ export class AuthenticationService {
   }
 
   loginCliente(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/loginCliente`, { username, password })
+    return this.http.post<any>(this.baseUrl + '/loginCliente', { username, password })
       .pipe(
         map(user => {
         // login successful if there's a jwt token in the response
@@ -70,7 +70,7 @@ export class AuthenticationService {
   }
 
   changePasswordSistema(username: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/changePasswordSistema`, { username, password })
+    return this.http.post<any>(this.baseUrl + '/changePasswordSistema', { username, password })
       .pipe(
         map(res => {
          return res;
@@ -78,7 +78,7 @@ export class AuthenticationService {
   }
 
   changePasswordPaciente(email: string, oldPassword: string, newPassword: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/changePasswordPaciente`, { email, oldPassword, newPassword })
+    return this.http.post<any>(this.baseUrl + '/changePasswordPaciente', { email, oldPassword, newPassword })
       .pipe(
         map(res => {
          return res;
@@ -92,7 +92,7 @@ export class AuthenticationService {
   }
 
   sendEmail(toEmail: string, bodyEmail: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/sendEmail`, { toEmail, bodyEmail })
+    return this.http.post<any>(this.baseUrl + '/sendEmail', { toEmail, bodyEmail })
     .pipe(
       map(res => {
         return res;

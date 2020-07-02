@@ -14,7 +14,7 @@ export class HorasLaboralesService {
   constructor(private http: HttpClient) { }
 
   horasLaboralesAdd(toDeleteEvent: any, horas: any, idDoctor: number, idClinica: number) {
-    return this.http.post<any>(`${this.baseUrl}/InsertarHorasLaborales`, {toDeleteEvent, horas, idClinica, idDoctor})
+    return this.http.post<any>(this.baseUrl + '/InsertarHorasLaborales', {toDeleteEvent, horas, idClinica, idDoctor})
     .pipe(
       map(res => {
         return res;
@@ -22,7 +22,7 @@ export class HorasLaboralesService {
   }
 
   consultarPorDoctor(idDoctor: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/ConsultarPorDoctor`, { "id": idDoctor })
+    return this.http.post<any>(this.baseUrl + '/ConsultarPorDoctor', { "id": idDoctor })
     .pipe(
       map(res => {
         return res;
@@ -30,7 +30,7 @@ export class HorasLaboralesService {
   }
 
   consultarPorDoctorClinica(idDoctor: number, idClinica: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/ConsultarPorDoctorClinica`, 
+    return this.http.post<any>(this.baseUrl + '/ConsultarPorDoctorClinica', 
       { "idDoctor": idDoctor, "idClinica": idClinica })
     .pipe(
       map(res => {
