@@ -63,6 +63,7 @@ import { DoctorLoginComponent } from './components/login/doctor-login/doctor-log
 import { RecuperarComponent } from './components/clientPortal/recuperar-contrasenia/recuperar/recuperar.component';
 import { PerfilPacienteComponent } from './components/clientPortal/perfil-paciente/perfil-paciente.component';
 import { HorasLaboralesComponent } from './components/horas-laborales/horas-laborales.component';
+import { SearchPipeDoctorPortal } from './components/clientPortal/portal/searchDoctor.pipe';
 
 export const MY_MOMENT_FORMATS = {
   parseInput: 'l LT',
@@ -101,6 +102,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SearchPipe,
     SearchPipeDoctor,
     SearchPipePortal,
+    SearchPipeDoctorPortal,
     PortalComponent,
     ClienteContactModalComponent,
     DoctorLoginComponent,

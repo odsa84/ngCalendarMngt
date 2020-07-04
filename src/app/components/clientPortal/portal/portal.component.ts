@@ -33,7 +33,7 @@ declare let Email: any;
 })
 export class PortalComponent implements OnInit {
 
-  term: string
+  term: string;
   clinicas: any = [];
   theClinica: any;
   theHorario: any;
@@ -65,6 +65,8 @@ export class PortalComponent implements OnInit {
   loginForm: FormGroup;
   regClienteForm: FormGroup;
   nombreCliente: string;
+  doctores: any = [];
+  showDoctores: boolean = false;
 
   public config: PerfectScrollbarConfigInterface = {};
 
@@ -278,16 +280,36 @@ export class PortalComponent implements OnInit {
     this.router.navigate(['/doctor-lista'], {
       queryParams: cli,
     })
-  }  
+  } 
+  
+  consultarPorCiudadClinicaEspecialidad() {
+    this.doctores = [];
+    this.doctorSrv.consultarPorCiudadClinicaEspecialidad(this.selectedCiu, this.theClinica.id, this.selectedEsp)
+    .subscribe(res => {
+      if(res.error.codigo === '01') {
+        this.toastr.error(res.error.mensaje, 'Sistema!');
+      } else if(res.error.codigo === '00') {
+        /*res.doctores.forEach(elem => {
+          this.doctores = [...this.doctores, elem];
+        })*/
+        this.doctores = res.doctores;
+        this.showDoctores = true;
+        this.term = ""; //vaciar string de busqueda por nombre
+      } else {
+        this.toastr.error('Error del sistema, contacte a un administrador.', 'Sistema!');
+      }
+    });
+  }
 
   selectClinica(clinica: any) {
     if(this.currentUser === null) {
-      this.toastr.warning("Por favor, inicie sesión en la aplicación", "Sistema!")
+      this.toastr.error("Por favor, inicie sesión en la aplicación", "Sistema!")
     } else {
       this.theClinica = clinica;
       this.hideHorarios = false;
       this.hideDatosCliente = true;    
       this.horarios = [];
+      this.consultarPorCiudadClinicaEspecialidad();
       this.calendarSrv.calendariosPorClinicaAgendadas(clinica.id).subscribe(res => {      
         this.citasAgendadas = res;
         this.fillHorarios();
@@ -297,6 +319,10 @@ export class PortalComponent implements OnInit {
         scrollTarget: '.horarioScroll',
       });
     }
+  }
+
+  selectDoctor(doc: any) {
+
   }
 
   selectHorario(horario: any) {
@@ -326,24 +352,7 @@ export class PortalComponent implements OnInit {
         
       }
     });
-  }
-
-  formatSelectedDate() {
-    this.formatedSelectedMoment = moment(this.selectedMoment).locale('es').format('dddd, D MMMM YYYY')
-  }
-
-  exitCalendario() {
-    this.hideHorarios = true;
-  }
-
-  exitContact() {
-    this.hideDatosCliente = true;
-  }
-
-  filtrarHorarios(event) {
-    this.horarios = [];
-    this.fillHorarios();
-  }
+  }  
 
   fillHorarios() {    
     this.horarios = [
@@ -447,6 +456,27 @@ export class PortalComponent implements OnInit {
       })
     })      
   } 
+
+  formatSelectedDate() {
+    this.formatedSelectedMoment = moment(this.selectedMoment).locale('es').format('dddd, D MMMM YYYY')
+  }
+
+  exitCalendario() {
+    this.hideHorarios = true;
+  }
+
+  exitDoctoresList() {
+    this.showDoctores = false;
+  }
+
+  exitContact() {
+    this.hideDatosCliente = true;
+  }
+
+  filtrarHorarios(event) {
+    this.horarios = [];
+    this.fillHorarios();
+  }
   
   sendEmail(email: string, pass: string) {
     //let body = '<i>This is sent as a feedback from my resume page.</i> <br/> <b>Name: </b>${this.model.name} <br /> <b>Email: </b>${this.model.email}<br /> <b>Subject: </b>${this.model.subject}<br /> <b>Message:</b> <br /> ${this.model.message} <br><br> <b>~End of Message.~</b>';  

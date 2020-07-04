@@ -241,13 +241,17 @@
                 <perfect-scrollbar style="max-width: 100%; max-height: 380px;" class="scroll-container"
                     [config]="config" [scrollIndicators]="true">
                     <div class="row">  
-                        <div class="col-6">       
+                        <div class="col-sm-4">       
                             <input class="form-control findByName" type="text" 
                                 placeholder="Buscar por nombre" aria-label="Search" [(ngModel)]="term"/>
                         </div>
+                        <div class="col-sm-4 float-left" *ngIf="showDoctores === true">
+                            <button (click)="exitDoctoresList()" class="btn btn-danger-cust float-left"
+                                style="margin-left: 5px">Clinicas</button>
+                        </div>
                     </div>
                     <br />
-                    <div class="row">
+                    <div *ngIf="showDoctores === false" class="row">
                         <div class="col-5" *ngFor="let cli of clinicas | searchPortal:term; let i = index">
                             <div class="card cardDimentions card-colors">
                                 <div class="card-header pointerCursor headerColor">
@@ -285,6 +289,46 @@
                             </div>
                         </div>
                     </div>
+                    <!--LISTADO DE DOCTORES-->
+                    <div *ngIf="showDoctores === true" class="row">
+                        <div class="col-5" *ngFor="let doc of doctores | searchDoctorPortal:term; let i = index">
+                            <div class="card cardDimentions card-colors">
+                                <div class="card-header pointerCursor headerColor">
+                                    <h4 class="card-title cus-content headerColor">
+                                        {{ doc.idDoctorNavigation.nombres }} {{ doc.idDoctorNavigation.apellidos }}
+                                    </h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="cardBody">
+                                        <a (click)="selectDoctor(doc)" class="card-block clearfix">
+                                            <div class="row vertical-align">
+                                                <div class="col-6">
+                                                    <img src="../../../assets/img/doctor.png" class="imgClass"
+                                                        (click)="selectDoctor(doc)">
+                                                </div>
+                                                <div class="col-6 cus-content">
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            Especialidades:
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" *ngFor="let esp of doc.idDoctorNavigation.doctorEspecialidad">
+                                                        <div class="col">
+                                                            - {{ esp.idEspecialidadNavigation.especialidad1 }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <ng-content select=".cardFooter"></ng-content>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--END LISTADO DE DOCTORES-->
                 </perfect-scrollbar>
             </div>
         </div>

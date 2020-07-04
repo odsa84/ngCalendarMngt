@@ -63,4 +63,17 @@ export class DoctorService {
       return res;
     }));
   }
+
+  consultarPorCiudadClinicaEspecialidad(idCiudad: number, idClinica: number, idEsp: number): Observable<any> {
+    if(idCiudad === null) {
+      idCiudad = 0;
+    }
+    if(idEsp === null) {
+      idEsp = 0;
+    }
+    return this.http.post<any>(this.baseUrl + '/PorCiudadClinicaEsp', {"idCiudad": idCiudad, "idClinica": idClinica, "idEspecialidad": idEsp})
+    .pipe(map(res => {
+      return res;
+    }));
+  }
 }
