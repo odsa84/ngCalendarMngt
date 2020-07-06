@@ -333,27 +333,12 @@ export class PortalComponent implements OnInit {
     this.showFiltrarHorarios = false;
     this.showMensajeNoTrabaja = false;
     this.horarios = [];
-    /*this.horasLaboralesSrv.consultarPorDoctor(doctor.idDoctor).subscribe(res => {
-      if(res.error.codigo === '00') {
-        this.horarios = [];
-        res.horasLaborales.forEach( elem => {
-          this.horarios = [...this.horarios, {
-            id: elem.id,
-            horaI: elem.horaInicio,
-            horaF: elem.horaFin,
-            fecha: elem.fecha,
-            estado: 'Disponible'
-          }]          
-        });
-      }
-    });*/
   }
 
   selectHorario(horario: any) {
     this.theHorario = horario;
     this.formatSelectedDate();
     this.hideDatosCliente = false;
-
     const modalDialog = this.matDialog.open(ClienteContactModalComponent, {
       disableClose: true,
       id: "cliente-contact-modal-component",
@@ -364,6 +349,7 @@ export class PortalComponent implements OnInit {
         clinica: this.theClinica,
         cliente: this.currentUser,
         doctor: this.theDoctor,
+        selectedEsp: this.selectedEsp,
         selectedDate: this.selectedMoment
       }
     });
@@ -407,9 +393,7 @@ export class PortalComponent implements OnInit {
     let fecha = moment(this.selectedMoment).format('YYYY-MM-DD')
     this.horasLaboralesSrv.consultarPorDoctorFecha(this.theDoctor.idDoctor, fecha)
     .subscribe(res => {
-      if(res.error.codigo === '00') {
-        this.showFiltrarHorarios = true;
-        this.showMensajeNoTrabaja = false;
+      if(res.error.codigo === '00') {        
         res.horasLaborales.forEach( elem => {
           this.horarios = [...this.horarios, {
             id: elem.id,
@@ -421,6 +405,7 @@ export class PortalComponent implements OnInit {
         });
       } else {        
         this.showMensajeNoTrabaja = true;
+        this.toastr.error(res.error.mensaje, 'Sistema!');
       }
     })
 
@@ -441,6 +426,8 @@ export class PortalComponent implements OnInit {
             }
           });
         });
+        this.showFiltrarHorarios = true;
+        this.showMensajeNoTrabaja = false;
       } else {
         this.toastr.error(res.error.mensaje, 'Sistema!');
       }

@@ -38,8 +38,17 @@
                             {{ theHorario.horaI }}
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col cus-content">
+                            <label for="ciudadCli">Especialidad:</label>
+                            <ng-select [items]="especialidades" bindLabel="especialidad1"
+                                placeholder="Seleccione una especialidad" [searchable]="true" bindValue="id"
+                                formControlName="especialidad" required>
+                            </ng-select>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </div>            
         </div>
         <div class="col-sm-8">
             <div class="card card-colors" style="height: 300px;">

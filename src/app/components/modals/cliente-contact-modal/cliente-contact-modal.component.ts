@@ -25,6 +25,8 @@ export class ClienteContactModalComponent implements OnInit {
   loading = false;
   selectedMoment: any;
   formatedSelectedMoment: string;
+  especialidades: any = [];
+  selectedEsp: any;
 
   dateTimeI: any;
   dateTimeF: any;
@@ -43,9 +45,13 @@ export class ClienteContactModalComponent implements OnInit {
     this.theHorario =  data.cita;
     this.selectedMoment = data.selectedDate;
     this.theClient = data.cliente;
-    this.theDoctor = data.doctor
+    this.theDoctor = data.doctor;
+    this.selectedEsp = data.selectedEsp;
     this.formatSelectedDate(this.selectedMoment);
     this.createDateTime();
+    this.theDoctor.idDoctorNavigation.doctorEspecialidad.forEach(elem => {
+      this.especialidades = [...this.especialidades, elem.idEspecialidadNavigation];
+    })
 
     this.contactForm = this.formBuilder.group({
       searchContact: [''],
@@ -55,6 +61,7 @@ export class ClienteContactModalComponent implements OnInit {
       telefono: [this.theClient.cliente.telefono, [Validators.pattern("^[0-9]*$"), Validators.minLength(7), 
           Validators.maxLength(15)]],
       email: [this.theClient.cliente.email, Validators.email],
+      especialidad: [this.selectedEsp, Validators.required]
     });
   }
 
