@@ -23,6 +23,7 @@ import { AuthenticationService } from '../../../services/authentication.service'
 import { first } from 'rxjs/operators';
 import { ClienteService } from '../../../services/cliente.service';
 import { utilClass } from '../../../utils/utilClass';
+import { HorasLaboralesService } from '../../../services/horas-laborales.service';
 
 declare let Email: any;
 
@@ -37,6 +38,7 @@ export class PortalComponent implements OnInit {
   clinicas: any = [];
   theClinica: any;
   theHorario: any;
+  theDoctor: any;
   paginationConfig: any;
   ciudad: any;
   submitted = false;
@@ -67,6 +69,9 @@ export class PortalComponent implements OnInit {
   nombreCliente: string;
   doctores: any = [];
   showDoctores: boolean = false;
+  showParamsBusqueda: boolean = true;
+  showFiltrarHorarios: boolean = false;
+  showMensajeNoTrabaja: boolean = false;
 
   public config: PerfectScrollbarConfigInterface = {};
 
@@ -89,6 +94,7 @@ export class PortalComponent implements OnInit {
     private authSrv: AuthenticationService,
     private formBuilder: FormBuilder,
     private utilClass: utilClass,
+    private horasLaboralesSrv: HorasLaboralesService,
     @Inject(DOCUMENT) private document: any
     ) {       
       this.getProvincias();
@@ -142,9 +148,10 @@ export class PortalComponent implements OnInit {
           this.submitted = false;
           this.showSpinner = false;
           this.currentUser = this.authSrv.currentUserValue;
+          this.toastr.success('Bienvenido a Portal Clinicas.', 'Sistema!');
           this.router.navigate(['/portal']);
           this.limpiarLoginForm();
-          this.nombreCliente = res.cliente.nombres + ' ' + res.cliente.apellidos;
+          this.nombreCliente = res.cliente.nombres + ' ' + res.cliente.apellidos;          
 				},
 				error => {
 					this.error = error;
@@ -289,9 +296,6 @@ export class PortalComponent implements OnInit {
       if(res.error.codigo === '01') {
         this.toastr.error(res.error.mensaje, 'Sistema!');
       } else if(res.error.codigo === '00') {
-        /*res.doctores.forEach(elem => {
-          this.doctores = [...this.doctores, elem];
-        })*/
         this.doctores = res.doctores;
         this.showDoctores = true;
         this.term = ""; //vaciar string de busqueda por nombre
@@ -306,23 +310,43 @@ export class PortalComponent implements OnInit {
       this.toastr.error("Por favor, inicie sesión en la aplicación", "Sistema!")
     } else {
       this.theClinica = clinica;
-      this.hideHorarios = false;
       this.hideDatosCliente = true;    
       this.horarios = [];
       this.consultarPorCiudadClinicaEspecialidad();
-      this.calendarSrv.calendariosPorClinicaAgendadas(clinica.id).subscribe(res => {      
+      /*this.calendarSrv.calendariosPorClinicaAgendadas(clinica.id).subscribe(res => {      
         this.citasAgendadas = res;
         this.fillHorarios();
       })
       this.pageScrollSrv.scroll({      
         document: this.document,
         scrollTarget: '.horarioScroll',
-      });
+      });*/
     }
   }
 
-  selectDoctor(doc: any) {
-
+  selectHorariosDoctor(doctor: any) {
+    this.theDoctor = doctor;
+    this.hideHorarios = false;
+    this.hideDatosCliente = true;
+    this.showDoctores = false;
+    this.showParamsBusqueda = false;
+    this.showFiltrarHorarios = false;
+    this.showMensajeNoTrabaja = false;
+    this.horarios = [];
+    /*this.horasLaboralesSrv.consultarPorDoctor(doctor.idDoctor).subscribe(res => {
+      if(res.error.codigo === '00') {
+        this.horarios = [];
+        res.horasLaborales.forEach( elem => {
+          this.horarios = [...this.horarios, {
+            id: elem.id,
+            horaI: elem.horaInicio,
+            horaF: elem.horaFin,
+            fecha: elem.fecha,
+            estado: 'Disponible'
+          }]          
+        });
+      }
+    });*/
   }
 
   selectHorario(horario: any) {
@@ -339,6 +363,7 @@ export class PortalComponent implements OnInit {
         cita: horario,
         clinica: this.theClinica,
         cliente: this.currentUser,
+        doctor: this.theDoctor,
         selectedDate: this.selectedMoment
       }
     });
@@ -347,115 +372,16 @@ export class PortalComponent implements OnInit {
         this.hideHorarios = true;
         this.theClinica = null;
         this.theHorario = null;
+        this.theDoctor = null;
         this.selectedMoment = new Date();
         this.formatedSelectedMoment = null;
-        
+        this.showDoctores = false;
+        this.showParamsBusqueda = true;
+        this.showFiltrarHorarios = false;
+        this.showMensajeNoTrabaja = false;
       }
     });
-  }  
-
-  fillHorarios() {    
-    this.horarios = [
-      {
-        id: '1',
-        horaI: '07:00',
-        horaF: '08:00',
-        estado: 'Disponible'
-      },
-      {
-        id: '2',
-        horaI: '08:00',
-        horaF: '09:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '3',
-        horaI: '09:00',
-        horaF: '10:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '4',
-        horaI: '10:00',
-        horaF: '11:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '5',
-        horaI: '11:00',
-        horaF: '12:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '6',
-        horaI: '12:00',
-        horaF: '13:00',
-        estado: 'No Disponible',        
-      },
-      {
-        id: '7',
-        horaI: '13:00',
-        horaF: '14:00',
-        estado: 'No Disponible',        
-      },
-      {
-        id: '8',
-        horaI: '14:00',
-        horaF: '15:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '9',
-        horaI: '15:00',
-        horaF: '16:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '10',
-        horaI: '16:00',
-        horaF: '17:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '11',
-        horaI: '17:00',
-        horaF: '18:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '12',
-        horaI: '18:00',
-        horaF: '19:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '13',
-        horaI: '19:00',
-        horaF: '20:00',
-        estado: 'Disponible',        
-      },
-      {
-        id: '14',
-        horaI: '20:00',
-        horaF: '21:00',
-        estado: 'Disponible',        
-      }
-    ];
-    this.horarios.forEach(elemH => {
-      if(moment(this.selectedMoment).format('YYYY-MM-DD HH:mm:ss') < moment().format('YYYY-MM-DD HH:mm:ss')
-        && elemH.horaF < moment().format('HH:mm')) {
-        elemH.estado = 'No Disponible';
-      }
-      this.citasAgendadas.calendarios.forEach(elemC => {        
-        if(moment(elemC.inicioFechaHora).format('YYYY-MM-DD') 
-          === moment(this.selectedMoment).format('YYYY-MM-DD')) {
-          if(moment(elemC.inicioFechaHora).format('HH:mm') === elemH.horaI) {
-            elemH.estado = 'No Disponible';
-          }
-        }
-      })
-    })      
-  } 
+  }
 
   formatSelectedDate() {
     this.formatedSelectedMoment = moment(this.selectedMoment).locale('es').format('dddd, D MMMM YYYY')
@@ -463,6 +389,9 @@ export class PortalComponent implements OnInit {
 
   exitCalendario() {
     this.hideHorarios = true;
+    this.showDoctores = true;
+    this.showParamsBusqueda = true;
+    this.showMensajeNoTrabaja = false;
   }
 
   exitDoctoresList() {
@@ -473,9 +402,49 @@ export class PortalComponent implements OnInit {
     this.hideDatosCliente = true;
   }
 
-  filtrarHorarios(event) {
-    this.horarios = [];
-    this.fillHorarios();
+  filtrarHorarios(event) {    
+    this.horarios = [];    
+    let fecha = moment(this.selectedMoment).format('YYYY-MM-DD')
+    this.horasLaboralesSrv.consultarPorDoctorFecha(this.theDoctor.idDoctor, fecha)
+    .subscribe(res => {
+      if(res.error.codigo === '00') {
+        this.showFiltrarHorarios = true;
+        this.showMensajeNoTrabaja = false;
+        res.horasLaborales.forEach( elem => {
+          this.horarios = [...this.horarios, {
+            id: elem.id,
+            horaI: elem.horaInicio,
+            horaF: elem.horaFin,
+            fecha: elem.fecha,
+            estado: 'Disponible'
+          }]          
+        });
+      } else {        
+        this.showMensajeNoTrabaja = true;
+      }
+    })
+
+    this.calendarSrv.calendariosPorDoctorAgendadas(this.theDoctor.idDoctor).subscribe(res => {      
+      if(res.error.codigo === '00') {
+        this.citasAgendadas = res;
+        this.horarios.forEach(elemH => {
+          if(moment(this.selectedMoment).format('YYYY-MM-DD HH:mm:ss') < moment().format('YYYY-MM-DD HH:mm:ss')
+            && elemH.horaF < moment().format('HH:mm')) {
+            elemH.estado = 'No Disponible';
+          }
+          this.citasAgendadas.calendarios.forEach(elemC => {        
+            if(moment(elemC.inicioFechaHora).format('YYYY-MM-DD') 
+              === moment(this.selectedMoment).format('YYYY-MM-DD')) {
+              if(moment(elemC.inicioFechaHora).format('HH:mm') === elemH.horaI) {
+                elemH.estado = 'No Disponible';
+              }
+            }
+          });
+        });
+      } else {
+        this.toastr.error(res.error.mensaje, 'Sistema!');
+      }
+    });   
   }
   
   sendEmail(email: string, pass: string) {

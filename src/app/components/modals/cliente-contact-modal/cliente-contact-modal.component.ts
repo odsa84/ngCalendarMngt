@@ -20,6 +20,7 @@ export class ClienteContactModalComponent implements OnInit {
   theHorario: any;
   theCliente: any = null;
   theClient: any = null;
+  theDoctor: any = null;
   submitted = false;
   loading = false;
   selectedMoment: any;
@@ -42,6 +43,7 @@ export class ClienteContactModalComponent implements OnInit {
     this.theHorario =  data.cita;
     this.selectedMoment = data.selectedDate;
     this.theClient = data.cliente;
+    this.theDoctor = data.doctor
     this.formatSelectedDate(this.selectedMoment);
     this.createDateTime();
 
@@ -89,7 +91,7 @@ export class ClienteContactModalComponent implements OnInit {
     this.calendarSrv.calendarioAdd(this.calendarSrv.crearEntradaInsertar(
       moment(this.dateTimeI).format('YYYY-MM-DDTHH:mm:ss'),
       moment(this.dateTimeF).format('YYYY-MM-DDTHH:mm:ss'),
-      0, this.theCliente.id, this.theClinica.id,
+      this.theDoctor.idDoctor, this.theCliente.id, this.theClinica.id,
       "", "", ""
     )).subscribe(res => {
       this.loading = false;

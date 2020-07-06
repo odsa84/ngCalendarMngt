@@ -85,7 +85,8 @@
                 </div>
             </div>
             <!-- END Login form -->
-            <div *ngIf="currentUser !== null" class="col-3 buscar-block">
+            <div *ngIf="currentUser !== null && showParamsBusqueda === true;" 
+                class="col-3 buscar-block">
                 <div class="card card-colors">
                     <div class="card-header headerColor">
                         <h4 class="card-title cus-content headerColor">Parámetros de búsqueda</h4>
@@ -237,21 +238,29 @@
                 </div>
             </div>
             <!-- END formulario registro -->                      
-            <div *ngIf="showRegisterForm === false" class="col-7 buscar-block">                
+            <div *ngIf="showRegisterForm === false && showParamsBusqueda === true" 
+            class="col-7 buscar-block">                
                 <perfect-scrollbar style="max-width: 100%; max-height: 380px;" class="scroll-container"
                     [config]="config" [scrollIndicators]="true">
-                    <div class="row">  
-                        <div class="col-sm-4">       
-                            <input class="form-control findByName" type="text" 
-                                placeholder="Buscar por nombre" aria-label="Search" [(ngModel)]="term"/>
-                        </div>
-                        <div class="col-sm-4 float-left" *ngIf="showDoctores === true">
-                            <button (click)="exitDoctoresList()" class="btn btn-danger-cust float-left"
-                                style="margin-left: 5px">Clinicas</button>
+                    <div class="panel-heading">
+                        <div class="row">  
+                            <div class="col-sm-4">       
+                                <input class="form-control findByName" type="text" 
+                                    placeholder="Buscar por nombre" aria-label="Search" [(ngModel)]="term"/>
+                            </div>
+                            <div class="col-sm-4" *ngIf="showDoctores === true">
+                                <h5>
+                                    {{ theClinica.nombre }}
+                                </h5>
+                            </div>
+                            <div class="col-sm-4 float-left" *ngIf="showDoctores === true">
+                                <button (click)="exitDoctoresList()" class="btn btn-danger-cust float-left"
+                                    style="margin-left: 5px">Clinicas</button>
+                            </div>
                         </div>
                     </div>
                     <br />
-                    <div *ngIf="showDoctores === false" class="row">
+                    <div *ngIf="showDoctores === false && showParamsBusqueda === true" class="row">
                         <div class="col-5" *ngFor="let cli of clinicas | searchPortal:term; let i = index">
                             <div class="card cardDimentions card-colors">
                                 <div class="card-header pointerCursor headerColor">
@@ -295,16 +304,17 @@
                             <div class="card cardDimentions card-colors">
                                 <div class="card-header pointerCursor headerColor">
                                     <h4 class="card-title cus-content headerColor">
-                                        {{ doc.idDoctorNavigation.nombres }} {{ doc.idDoctorNavigation.apellidos }}
+                                        {{ doc.idDoctorNavigation.nombres }} 
+                                        {{ doc.idDoctorNavigation.apellidos }}
                                     </h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="cardBody">
-                                        <a (click)="selectDoctor(doc)" class="card-block clearfix">
+                                        <a (click)="selectHorariosDoctor(doc)" class="card-block clearfix">
                                             <div class="row vertical-align">
                                                 <div class="col-6">
                                                     <img src="../../../assets/img/doctor.png" class="imgClass"
-                                                        (click)="selectDoctor(doc)">
+                                                        (click)="selectHorariosDoctor(doc)">
                                                 </div>
                                                 <div class="col-6 cus-content">
                                                     <div class="row">
@@ -349,16 +359,26 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-sm-5">
-                                <h5>Seleccione un horario</h5>
+                                <h5>
+                                    Dr(a). {{ theDoctor.idDoctorNavigation.nombres }}
+                                    {{ theDoctor.idDoctorNavigation.apellidos }}
+                                </h5>
                             </div>
                             <div class="col-sm-7">
                                 <button (click)="exitCalendario()" class="btn btn-danger-cust"
-                                    style="margin-left: 5px">Cancelar</button>
+                                    style="margin-left: 5px">Doctores</button>
                             </div>
                         </div>
+                    </div>                                       
+                    <div class="panel-body table-responsive" *ngIf="!showFiltrarHorarios">
+                        <br />
+                        <br />
+                        <h5 *ngIf="!showMensajeNoTrabaja">Seleccione en el panel de la izquierda el día en que desea su cita médica</h5>
+                        <h5 *ngIf="showMensajeNoTrabaja">Todo parese indicar que el doctor {{ theDoctor.idDoctorNavigation.apellidos }} 
+                            no trabaja el día de hoy</h5>
                     </div>
                     <br />
-                    <div class="panel-body table-responsive">
+                    <div class="panel-body table-responsive" *ngIf="showFiltrarHorarios && showMensajeNoTrabaja === false">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -389,7 +409,6 @@
                 </div>
             </div>
         </div>
-        <div class="horarioScroll"></div>
     </div>
 </div>
 <footer class="footer-class" style="width: 100%;">

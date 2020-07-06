@@ -61,6 +61,14 @@ export class CalendarService {
       }));
   }
 
+  calendariosPorDoctorAgendadas(idDoctor: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/PorDoctorAgendadas`, {"id": idDoctor})
+    .pipe(
+      map(res => {
+        return res;
+      }));
+  }
+
   calendariosPorCliente(idCliente: number): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/PorCliente`, {"id": idCliente})
     .pipe(
