@@ -38,9 +38,9 @@ export class HorasLaboralesService {
       }));
   }
 
-  consultarPorDoctorFecha(idDoctor: number, fecha: string): Observable<any> {
-    return this.http.post<any>(this.baseUrl + '/ConsultarPorDoctorFecha', 
-      { "idDoctor": idDoctor, "fecha": fecha })
+  consultarPorDoctorClinicaFecha(idDoctor: number, idClinica: number, fecha: string): Observable<any> {
+    return this.http.post<any>(this.baseUrl + '/ConsultarPorDoctorClinicaFecha', 
+      { "idDoctor": idDoctor, "idClinica": idClinica, "fecha": fecha })
     .pipe(
       map(res => {
         return res;

@@ -333,6 +333,7 @@ export class PortalComponent implements OnInit {
     this.showFiltrarHorarios = false;
     this.showMensajeNoTrabaja = false;
     this.horarios = [];
+    this.filtrarHorarios();
   }
 
   selectHorario(horario: any) {
@@ -388,10 +389,11 @@ export class PortalComponent implements OnInit {
     this.hideDatosCliente = true;
   }
 
-  filtrarHorarios(event) {    
+  filtrarHorarios() { 
     this.horarios = [];    
     let fecha = moment(this.selectedMoment).format('YYYY-MM-DD')
-    this.horasLaboralesSrv.consultarPorDoctorFecha(this.theDoctor.idDoctor, fecha)
+    this.horasLaboralesSrv.consultarPorDoctorClinicaFecha(this.theDoctor.idDoctor, 
+      this.theClinica.id, fecha)
     .subscribe(res => {
       if(res.error.codigo === '00') {        
         res.horasLaborales.forEach( elem => {
