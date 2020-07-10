@@ -21,6 +21,24 @@ export class HorasLaboralesService {
       }));
   }
 
+  actualizarDisponibilidad(id: number, idDoctor: number, idClinica: number, disp: boolean) {
+    return this.http.post<any>(this.baseUrl + '/ActualizarDisponibilidad', {"id": id, "horaInicio": "",
+    "horaFin": "", "fecha": "", "idDoctor": idDoctor, "idClinica": idClinica,  "disponible": disp})
+    .pipe(
+      map(res => {
+        return res;
+      }))
+  }
+
+  consultarActualizarDisponibilidad(id: number, idDoctor: number, idClinica: number, disp: boolean) {
+    return this.http.post<any>(this.baseUrl + '/ConsultarActualizarDisponibilidad', {"id": id, "horaInicio": "",
+    "horaFin": "", "fecha": "", "idDoctor": idDoctor, "idClinica": idClinica,  "disponibilidad": disp})
+    .pipe(
+      map(res => {
+        return res;
+      }))
+  }
+
   consultarPorDoctor(idDoctor: number): Observable<any> {
     return this.http.post<any>(this.baseUrl + '/ConsultarPorDoctor', { "id": idDoctor })
     .pipe(

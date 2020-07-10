@@ -43,8 +43,12 @@
                             <label for="ciudadCli">Especialidad:</label>
                             <ng-select [items]="especialidades" bindLabel="especialidad1"
                                 placeholder="Seleccione una especialidad" [searchable]="true" bindValue="id"
-                                formControlName="especialidad" required>
+                                formControlName="especialidad" 
+                                [ngClass]="{ 'is-invalid': submitted && f.especialidad.errors }" required>
                             </ng-select>
+                            <div *ngIf="submitted && contactForm.controls['especialidad'].errors" class="invalid-feedback">
+                                <div *ngIf="contactForm.controls['especialidad'].errors.required">Campo obligatorio</div>
+                            </div>
                         </div>
                     </div>
                 </div>

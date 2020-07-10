@@ -7,6 +7,7 @@ import { ClienteService } from '../../../services/cliente.service';
 import { CalendarService } from '../../../services/calendar.service';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { utilClass } from '../../../utils/utilClass';
+import { HorasLaboralesService } from '../../../services/horas-laborales.service';
 
 @Component({
   selector: 'app-cliente-contact-modal',
@@ -39,6 +40,7 @@ export class ClienteContactModalComponent implements OnInit {
     private calendarSrv: CalendarService,
     private authSrv: AuthenticationService,
     private util: utilClass,
+    private horasLaboralesSrv: HorasLaboralesService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
     ) { 
     this.theClinica = data.clinica;
@@ -51,7 +53,7 @@ export class ClienteContactModalComponent implements OnInit {
     this.createDateTime();
     this.theDoctor.idDoctorNavigation.doctorEspecialidad.forEach(elem => {
       this.especialidades = [...this.especialidades, elem.idEspecialidadNavigation];
-    })
+    });
 
     this.contactForm = this.formBuilder.group({
       searchContact: [''],
@@ -94,7 +96,7 @@ export class ClienteContactModalComponent implements OnInit {
     }     
   }
 
-  addCalendario() {
+  addCalendario() {    
     this.calendarSrv.calendarioAdd(this.calendarSrv.crearEntradaInsertar(
       moment(this.dateTimeI).format('YYYY-MM-DDTHH:mm:ss'),
       moment(this.dateTimeF).format('YYYY-MM-DDTHH:mm:ss'),
@@ -105,7 +107,7 @@ export class ClienteContactModalComponent implements OnInit {
       this.submitted = false;
       if(res.error.codigo === '00') {
         this.toastr.success("Su cita médica ha sido agendada. Se le envió un correo con el detalle", "Sistema!");
-        this.closeModal(res);
+        this.closeModal(res);        
       } else{
         this.toastr.error("Error del sistema.", "Sistema!");
       }
@@ -176,17 +178,19 @@ export class ClienteContactModalComponent implements OnInit {
     }, error => {
       this.closeModal(undefined);
       this.toastr.error('Error de sistema! Por favor inténtelo mas tarde', 'Sistema!')
-    })
+    });
   }
 
   closeModal(cita: any) {
-    let aux = {
-      cita: cita,
-      cliente: this.theCliente
-    }
-    this.dialogRef.close({event:'close', data: aux});
-    this.theCliente = null;
-    //this.theClinica = null;
+    this.horasLaboralesSrv.actualizarDisponibilidad(this.theHorario.id, this.theDoctor.idDoctor, 
+      this.theClinica.id, true).subscribe(res => {
+        let aux = {
+          cita: cita,
+          cliente: this.theCliente
+        }
+        this.dialogRef.close({event:'close', data: aux});
+        this.theCliente = null;
+      });    
   }
 
   keyPress(event: any) {

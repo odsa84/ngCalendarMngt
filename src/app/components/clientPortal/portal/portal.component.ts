@@ -340,6 +340,20 @@ export class PortalComponent implements OnInit {
     this.theHorario = horario;
     this.formatSelectedDate();
     this.hideDatosCliente = false;
+
+    this.horasLaboralesSrv.consultarActualizarDisponibilidad(horario.id, this.theDoctor.idDoctor, 
+      this.theClinica.id, false).subscribe(res => {
+        if(res.error.codigo === '00') {
+          this.openClienteContactModal(horario);
+        } else if(res.error.codigo === '01') {
+          this.toastr.error('Otro paciente le ganó este horario. Seleccione otro por favor.', 'Sistema!');
+        } else if(res.error.codigo === '02') {
+          this.toastr.error('Hubo un error al procesar su colicitud, intentelo más tarde.', 'Sistema!');
+        }
+      });    
+  }
+
+  openClienteContactModal(horario: any) {
     const modalDialog = this.matDialog.open(ClienteContactModalComponent, {
       disableClose: true,
       id: "cliente-contact-modal-component",
@@ -394,8 +408,8 @@ export class PortalComponent implements OnInit {
     let fecha = moment(this.selectedMoment).format('YYYY-MM-DD')
     this.horasLaboralesSrv.consultarPorDoctorClinicaFecha(this.theDoctor.idDoctor, 
       this.theClinica.id, fecha)
-    .subscribe(res => {
-      if(res.error.codigo === '00') {        
+    .subscribe(res => {      
+      if(res.error.codigo === '00') {               
         res.horasLaborales.forEach( elem => {
           this.horarios = [...this.horarios, {
             id: elem.id,
@@ -405,20 +419,17 @@ export class PortalComponent implements OnInit {
             estado: 'Disponible'
           }]          
         });
+        this.showFiltrarHorarios = true;
       } else {        
         this.showMensajeNoTrabaja = true;
         this.toastr.error(res.error.mensaje, 'Sistema!');
       }
     })
 
-    this.calendarSrv.calendariosPorDoctorAgendadas(this.theDoctor.idDoctor).subscribe(res => {      
+    this.calendarSrv.calendariosPorDoctorAgendadas(this.theDoctor.idDoctor).subscribe(res => {        
       if(res.error.codigo === '00') {
         this.citasAgendadas = res;
         this.horarios.forEach(elemH => {
-          if(moment(this.selectedMoment).format('YYYY-MM-DD HH:mm:ss') < moment().format('YYYY-MM-DD HH:mm:ss')
-            && elemH.horaF < moment().format('HH:mm')) {
-            elemH.estado = 'No Disponible';
-          }
           this.citasAgendadas.calendarios.forEach(elemC => {        
             if(moment(elemC.inicioFechaHora).format('YYYY-MM-DD') 
               === moment(this.selectedMoment).format('YYYY-MM-DD')) {
@@ -430,9 +441,13 @@ export class PortalComponent implements OnInit {
         });
         this.showFiltrarHorarios = true;
         this.showMensajeNoTrabaja = false;
-      } else {
-        this.toastr.error(res.error.mensaje, 'Sistema!');
-      }
+      };
+      this.horarios.forEach(elemH => {
+        if(moment(this.selectedMoment).format('YYYY-MM-DD HH:mm:ss') < moment().format('YYYY-MM-DD HH:mm:ss')
+          && elemH.horaF < moment().format('HH:mm')) {
+          elemH.estado = 'No Disponible';
+        }
+      });
     });   
   }
   
