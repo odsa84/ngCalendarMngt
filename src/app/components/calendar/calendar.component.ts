@@ -68,7 +68,6 @@ export class CalendarComponent implements OnInit {
   calendarEvents: any = [];
 
   toggleVisible() {
-    //this.calendarVisible = !this.calendarVisible;
     this.selectedDoc = null;
     this.selectedCli = null;
     this.selectedClie = null;

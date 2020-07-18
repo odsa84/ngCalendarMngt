@@ -350,7 +350,7 @@
                     </div>
                     <br />
                     <owl-date-time-inline [(ngModel)]="selectedMoment" class="owlDatTime" 
-                        [min]="minDateTime" pickerType="calendar" (ngModelChange)='filtrarHorarios()'>
+                        [min]="minDateTime" pickerType="calendar" (ngModelChange)='filtrarHorarios($event)'>
                     </owl-date-time-inline>
                 </div>
             </div>
@@ -388,8 +388,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr [ngClass]="{ 'red-row-class' : h.estado != 'Disponible', 'green-row-class' : h.estado == 'Disponible' }"
-                                    *ngFor="let h of horarios | paginate: paginationConfig;">
+                                <tr *ngFor="let h of horarios | paginate: paginationConfig"
+                                    [ngClass]="{ 'red-row-class' : h.estado != 'Disponible', 'green-row-class' : h.estado == 'Disponible' }">
                                     <td>{{ h.horaI }} - {{h.horaF}}</td>
                                     <td>{{ h.estado }}</td>
                                     <td>

@@ -8,6 +8,7 @@ import { CalendarService } from '../../../services/calendar.service';
 import { AuthenticationService } from '../../../services/authentication.service';
 import { utilClass } from '../../../utils/utilClass';
 import { HorasLaboralesService } from '../../../services/horas-laborales.service';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-cliente-contact-modal',
@@ -68,6 +69,10 @@ export class ClienteContactModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    interval(10000).subscribe(() => {
+      //this.changeDetector.detectChanges();
+      this.closeModal(undefined);
+    });
   }
 
   onSubmit() {

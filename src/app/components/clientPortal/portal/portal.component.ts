@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ClinicaService } from '../../../services/clinica.service';
 import { ToastrService } from 'ngx-toastr';
 import { DoctorService } from '../../../services/doctor.service';
@@ -15,12 +15,11 @@ import { PerfectScrollbarConfigInterface,
   PerfectScrollbarComponent, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { DOCUMENT } from '@angular/common';
 import { PageScrollService } from 'ngx-page-scroll-core';
-import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ClienteContactModalComponent } from '../../modals/cliente-contact-modal/cliente-contact-modal.component';
 import { CalendarService } from '../../../services/calendar.service';
 import { AuthenticationService } from '../../../services/authentication.service';
-import { first } from 'rxjs/operators';
 import { ClienteService } from '../../../services/cliente.service';
 import { utilClass } from '../../../utils/utilClass';
 import { HorasLaboralesService } from '../../../services/horas-laborales.service';
@@ -95,6 +94,7 @@ export class PortalComponent implements OnInit {
     private formBuilder: FormBuilder,
     private utilClass: utilClass,
     private horasLaboralesSrv: HorasLaboralesService,
+    private cd: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: any
     ) {       
       this.getProvincias();
@@ -310,8 +310,7 @@ export class PortalComponent implements OnInit {
       this.toastr.error("Por favor, inicie sesión en la aplicación", "Sistema!")
     } else {
       this.theClinica = clinica;
-      this.hideDatosCliente = true;    
-      this.horarios = [];
+      this.hideDatosCliente = true;
       this.consultarPorCiudadClinicaEspecialidad();
       /*this.calendarSrv.calendariosPorClinicaAgendadas(clinica.id).subscribe(res => {      
         this.citasAgendadas = res;
@@ -332,8 +331,7 @@ export class PortalComponent implements OnInit {
     this.showParamsBusqueda = false;
     this.showFiltrarHorarios = false;
     this.showMensajeNoTrabaja = false;
-    this.horarios = [];
-    this.filtrarHorarios();
+    this.filtrarHorarios(null);
   }
 
   selectHorario(horario: any) {
@@ -403,13 +401,13 @@ export class PortalComponent implements OnInit {
     this.hideDatosCliente = true;
   }
 
-  filtrarHorarios() { 
+  filtrarHorarios(event: any) { 
     this.horarios = [];    
     let fecha = moment(this.selectedMoment).format('YYYY-MM-DD')
     this.horasLaboralesSrv.consultarPorDoctorClinicaFecha(this.theDoctor.idDoctor, 
       this.theClinica.id, fecha)
     .subscribe(res => {      
-      if(res.error.codigo === '00') {               
+      if(res.error.codigo === '00') {            
         res.horasLaborales.forEach( elem => {
           this.horarios = [...this.horarios, {
             id: elem.id,

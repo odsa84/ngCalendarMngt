@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
 import { utilClass } from '../../../utils/utilClass';
 import { ToastrService } from 'ngx-toastr';
-import { CalendarService } from '../../../services/calendar.service';
 
 @Component({
   selector: 'app-perfil-paciente',
@@ -28,7 +27,6 @@ export class PerfilPacienteComponent implements OnInit {
     private authSrv: AuthenticationService,
     private toastr: ToastrService,
     private route: Router,
-    private calendarSrv: CalendarService
     ) { 
       this.recuperarForm = this.formBuilder.group({
         passwordAnt: ['', Validators.required],
@@ -50,7 +48,6 @@ export class PerfilPacienteComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("Llegas aqui??")
     this.submitted = true;	
 		if (this.recuperarForm.invalid) {
 			this.submitted = false;
