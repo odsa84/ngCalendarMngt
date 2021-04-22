@@ -335,6 +335,7 @@ export class PortalComponent implements OnInit {
   }
 
   selectHorario(horario: any) {
+    console.log(horario);
     this.theHorario = horario;
     this.formatSelectedDate();
     this.hideDatosCliente = false;
@@ -344,7 +345,7 @@ export class PortalComponent implements OnInit {
         if(res.error.codigo === '00') {
           this.openClienteContactModal(horario);
         } else if(res.error.codigo === '01') {
-          this.toastr.error('Otro paciente le ganó este horario. Seleccione otro por favor.', 'Sistema!');
+          this.toastr.error('Otro paciente seleccionó este horario. Seleccione otro por favor.', 'Sistema!');
         } else if(res.error.codigo === '02') {
           this.toastr.error('Hubo un error al procesar su colicitud, intentelo más tarde.', 'Sistema!');
         }
